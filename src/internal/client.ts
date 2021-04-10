@@ -110,7 +110,7 @@ export class Client implements IClient {
     const descriptor = this.createRequestDescriptor(setup)
 
     this.registerRequestAbortionHandler(descriptor)
-    this.runRequestRejectionTimer(descriptor)
+    this.runRequestRejectionTimeout(descriptor)
 
     await this.emitRequestEvent(descriptor.setup)
 
@@ -130,7 +130,7 @@ export class Client implements IClient {
 
       return result
     } finally {
-      this.clearRequestRejectionTimer(descriptor.context)
+      this.clearRequestRejectionTimeout(descriptor.context)
       this.unregisterRequestAbortionHandler(descriptor)
     }
   }
@@ -143,7 +143,7 @@ export class Client implements IClient {
 
       const requestInit = this.createRequestInit(descriptor)
 
-      this.runRequestAttemptRejectionTimer(descriptor)
+      this.runRequestAttemptRejectionTimeout(descriptor)
 
       const response = await fetch(url, requestInit)
 
@@ -172,7 +172,7 @@ export class Client implements IClient {
 
       throw error
     } finally {
-      this.clearRequestAttemptRejectionTimer(descriptor.context)
+      this.clearRequestAttemptRejectionTimeout(descriptor.context)
     }
   }
 
@@ -281,48 +281,44 @@ export class Client implements IClient {
   ): void {
     descriptor.setup.abortController.signal.removeEventListener(
       'abort',
-      descriptor.context.abortionHandler!
+      descriptor.context.abortionHandler
     )
-
-    descriptor.context.abortionHandler = null
   }
 
-  private runRequestRejectionTimer(descriptor: RequestDescriptor): void {
+  private runRequestRejectionTimeout(descriptor: RequestDescriptor): void {
     const { rejectionDelay } = descriptor.setup
 
     if (Number.isNaN(rejectionDelay) || rejectionDelay <= 0) {
       return
     }
 
-    descriptor.context.rejectionTimer = setTimeout(
+    descriptor.context.rejectionTimeoutId = (setTimeout(
       () => descriptor.setup.abortController.abort(),
       rejectionDelay
-    )
+    ) as unknown) as number
   }
 
-  private runRequestAttemptRejectionTimer(descriptor: RequestDescriptor): void {
+  private runRequestAttemptRejectionTimeout(
+    descriptor: RequestDescriptor
+  ): void {
     const { attemptRejectionDelay } = descriptor.setup
 
     if (Number.isNaN(attemptRejectionDelay) || attemptRejectionDelay <= 0) {
       return
     }
 
-    descriptor.context.rejectionTimer = setTimeout(
+    descriptor.context.rejectionTimeoutId = (setTimeout(
       () => descriptor.context.attemptAbortController.abort(),
       attemptRejectionDelay
-    )
+    ) as unknown) as number
   }
 
-  private clearRequestRejectionTimer(context: RequestContext): void {
-    clearTimeout(context.rejectionTimer!)
-
-    context.rejectionTimer = null
+  private clearRequestRejectionTimeout(context: RequestContext): void {
+    clearTimeout(context.rejectionTimeoutId)
   }
 
-  private clearRequestAttemptRejectionTimer(context: RequestContext): void {
-    clearTimeout(context.attemptRejectionTimer!)
-
-    context.attemptRejectionTimer = null
+  private clearRequestAttemptRejectionTimeout(context: RequestContext): void {
+    clearTimeout(context.attemptRejectionTimeoutId)
   }
 
   private serializeRequestPayload(setup: RequestSetup): any {
@@ -395,9 +391,11 @@ export class Client implements IClient {
       totalRetries: 0,
       retriesAfterDelays: 0,
       attemptAbortController: new AbortController(),
-      rejectionTimer: null,
-      attemptRejectionTimer: null,
-      abortionHandler: null
+      rejectionTimeoutId: 0,
+      attemptRejectionTimeoutId: 0,
+      abortionHandler: () => {
+        throw new Error('The abortion cannot be called manually')
+      }
     }
   }
 

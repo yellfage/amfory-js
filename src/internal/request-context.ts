@@ -5,7 +5,7 @@ export type RequestContext = {
   totalRetries: number
   retriesAfterDelays: number
   attemptAbortController: AbortController
-  rejectionTimer: NodeJS.Timeout | null
-  attemptRejectionTimer: NodeJS.Timeout | null
-  abortionHandler: Callback<[Event]> | null
+  rejectionTimeoutId: number
+  attemptRejectionTimeoutId: number
+  abortionHandler: Callback<[Event]>
 }
