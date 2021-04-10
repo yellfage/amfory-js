@@ -394,7 +394,7 @@ export class Client implements IClient {
       rejectionTimeoutId: 0,
       attemptRejectionTimeoutId: 0,
       abortionHandler: () => {
-        throw new Error('The abortion cannot be called manually')
+        throw new Error('An abortion handler cannot be called manually')
       }
     }
   }
