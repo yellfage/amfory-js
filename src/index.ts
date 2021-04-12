@@ -1,5 +1,7 @@
 import 'cross-fetch/polyfill'
 
+export * from './settings'
+
 export * from './client-builder'
 export * from './client-options'
 export * from './i-client'
