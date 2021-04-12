@@ -74,7 +74,7 @@ export enum HttpStatus {
   WebServerIsDown = 521,
   ConnectionTimedOut = 522,
   OriginIsUnreachable = 523,
-  ATimeoutOccurred = 524,
+  TimeoutOccurred = 524,
   SslHandshakeFailed = 525,
   InvalidSslCertificate = 526
 }
