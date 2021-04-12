@@ -3,6 +3,20 @@ import { RequestSettings } from '../request-settings'
 import { RequestRetryConfirmationCallback } from '../../request-retry-confirmation-callback'
 import { RequestResolveConfirmationCallback } from '../../request-resolve-confirmation-callback'
 
+const RETRYABLE_STATUSES: HttpStatus[] = [
+  HttpStatus.RequestTimeout,
+  HttpStatus.InternalServerError,
+  HttpStatus.ServiceUnavailable,
+  HttpStatus.GatewayTimeout,
+  HttpStatus.InsufficientStorage,
+  HttpStatus.BandwidthLimitExceeded,
+  HttpStatus.UnknownError,
+  HttpStatus.WebServerIsDown,
+  HttpStatus.ConnectionTimedOut,
+  HttpStatus.OriginIsUnreachable,
+  HttpStatus.TimeoutOccurred
+]
+
 export class DefaultRequestSettings implements RequestSettings {
   public headersInit: HeadersInit
   public rejectionDelay: number
@@ -22,7 +36,7 @@ export class DefaultRequestSettings implements RequestSettings {
     this.minRetryDelayAddition = 0
     this.maxRetryDelayAddition = 0
     this.maxRetriesAfterDelays = 0
-    this.confirmRetry = (status) => status === HttpStatus.InternalServerError
+    this.confirmRetry = (status) => RETRYABLE_STATUSES.includes(status)
     this.confirmResolve = (result) =>
       result.status < HttpStatus.InternalServerError
   }
