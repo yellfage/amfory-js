@@ -2,6 +2,7 @@ import { RequestRetryConfirmationCallback } from '../request-retry-confirmation-
 import { RequestResolveConfirmationCallback } from '../request-resolve-confirmation-callback'
 
 export type RequestSettings = {
+  baseUrl: string
   headersInit: HeadersInit
   rejectionDelay: number
   attemptRejectionDelay: number

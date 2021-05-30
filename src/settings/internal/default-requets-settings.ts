@@ -18,6 +18,7 @@ const RETRYABLE_STATUSES: HttpStatus[] = [
 ]
 
 export class DefaultRequestSettings implements RequestSettings {
+  public baseUrl: string
   public headersInit: HeadersInit
   public rejectionDelay: number
   public attemptRejectionDelay: number
@@ -29,6 +30,7 @@ export class DefaultRequestSettings implements RequestSettings {
   public confirmResolve: RequestResolveConfirmationCallback
 
   public constructor() {
+    this.baseUrl = ''
     this.headersInit = new Headers()
     this.rejectionDelay = 30000
     this.attemptRejectionDelay = 10000

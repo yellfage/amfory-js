@@ -2,6 +2,7 @@ import { RequestRetryConfirmationCallback } from './request-retry-confirmation-c
 import { RequestResolveConfirmationCallback } from './request-resolve-confirmation-callback'
 
 export type RequestOptions = {
+  baseUrl?: string
   paramsInit?: string | string[][] | Record<string, string> | URLSearchParams
   headersInit?: HeadersInit
   abortController?: AbortController

@@ -44,56 +44,56 @@ export class Client implements IClient {
   }
 
   public async get(
-    url: string,
-    options: RequestOptions = {}
+    path: string,
+    options?: RequestOptions
   ): Promise<RequestResult> {
-    return await this.send(this.createRequestSetup(url, 'GET', null, options))
+    return await this.send(this.createRequestSetup(path, 'GET', null, options))
   }
 
   public async head(
-    url: string,
+    path: string,
     options?: RequestOptions
   ): Promise<RequestResult> {
-    return await this.send(this.createRequestSetup(url, 'HEAD', null, options))
+    return await this.send(this.createRequestSetup(path, 'HEAD', null, options))
   }
 
   public async post(
-    url: string,
+    path: string,
     payload?: any,
     options?: RequestOptions
   ): Promise<RequestResult> {
     return await this.send(
-      this.createRequestSetup(url, 'POST', payload, options)
+      this.createRequestSetup(path, 'POST', payload, options)
     )
   }
 
   public async put(
-    url: string,
+    path: string,
     payload?: any,
     options?: RequestOptions
   ): Promise<RequestResult> {
     return await this.send(
-      this.createRequestSetup(url, 'PUT', payload, options)
+      this.createRequestSetup(path, 'PUT', payload, options)
     )
   }
 
   public async delete(
-    url: string,
+    path: string,
     payload?: any,
     options?: RequestOptions
   ): Promise<RequestResult> {
     return await this.send(
-      this.createRequestSetup(url, 'DELETE', payload, options)
+      this.createRequestSetup(path, 'DELETE', payload, options)
     )
   }
 
   public async patch(
-    url: string,
+    path: string,
     payload?: any,
     options?: RequestOptions
   ): Promise<RequestResult> {
     return await this.send(
-      this.createRequestSetup(url, 'PATCH', payload, options)
+      this.createRequestSetup(path, 'PATCH', payload, options)
     )
   }
 
@@ -343,12 +343,13 @@ export class Client implements IClient {
   }
 
   private createRequestSetup(
-    urlString: string,
+    path: string,
     method: HttpMethod,
     payload: any,
     options: RequestOptions = {}
   ): RequestSetup {
     const {
+      baseUrl = this.requestSettings.baseUrl,
       paramsInit,
       headersInit,
       rejectionDelay = this.requestSettings.rejectionDelay,
@@ -362,7 +363,8 @@ export class Client implements IClient {
       confirmResolve = this.requestSettings.confirmResolve
     } = options
 
-    const url = new URL(urlString)
+    const url = new URL(path, baseUrl || undefined) // Replace an empty baseUrl to prevent throwing errors
+
     const headers = new Headers(this.requestSettings.headersInit)
 
     this.populateHeaders(headers, new Headers(headersInit))
