@@ -1,10 +1,8 @@
 import { RequestResult } from './request-result'
-import { RequestSetup } from './request-setup'
+import { RequestShape } from './request-shape'
 
-export type RequestCompletionEvent<
-  TResultPayload = any,
-  TSetupPayload = any
-> = {
-  readonly result: RequestResult<TResultPayload>
-  readonly setup: RequestSetup<TSetupPayload>
-}
+export type RequestCompletionEvent<TResultPayload = any, TShapePayload = any> =
+  {
+    readonly result: RequestResult<TResultPayload>
+    readonly shape: RequestShape<TShapePayload>
+  }

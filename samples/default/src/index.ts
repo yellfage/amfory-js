@@ -45,6 +45,13 @@ client.requestRetry.add(() => console.log('Request retry'))
   })
 
   console.log(patchResult)
+
+  const sendResult = await client.send<Foo, string>({
+    url: '/get',
+    method: 'GET'
+  })
+
+  console.log(sendResult)
 })()
 
 type Foo = {

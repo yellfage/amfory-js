@@ -1,5 +1,5 @@
-import { RequestSetup } from './request-setup'
+import { RequestShape } from './request-shape'
 
 export type RequestEvent<TPayload = any> = {
-  readonly setup: RequestSetup<TPayload>
+  readonly shape: RequestShape<TPayload>
 }

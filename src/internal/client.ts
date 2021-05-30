@@ -13,10 +13,10 @@ import { RequestCompletionEventHandler } from '../request-completion-event-handl
 import { RequestRetryEventHandler } from '../request-retry-event-handler'
 import { RequestOptions } from '../request-options'
 import { RequestResult } from '../request-result'
-import { HttpMethod } from '../http-method'
 import { RequestSettings } from '../settings'
 import { RequestDescriptor } from './request-descriptor'
 import { RequestSetup } from '../request-setup'
+import { RequestShape } from '../request-shape'
 
 import { ObjectHelper } from './object-helper'
 
@@ -44,84 +44,76 @@ export class Client implements IClient {
   }
 
   public async get(
-    path: string,
+    url: string,
     options?: RequestOptions
   ): Promise<RequestResult> {
-    return await this.send(this.createRequestSetup(path, 'GET', null, options))
+    return await this.send({ url, method: 'GET', ...options })
   }
 
   public async head(
-    path: string,
+    url: string,
     options?: RequestOptions
   ): Promise<RequestResult> {
-    return await this.send(this.createRequestSetup(path, 'HEAD', null, options))
+    return await this.send({ url, method: 'HEAD', ...options })
   }
 
   public async post(
-    path: string,
+    url: string,
     payload?: any,
     options?: RequestOptions
   ): Promise<RequestResult> {
-    return await this.send(
-      this.createRequestSetup(path, 'POST', payload, options)
-    )
+    return await this.send({ url, method: 'POST', payload, ...options })
   }
 
   public async put(
-    path: string,
+    url: string,
     payload?: any,
     options?: RequestOptions
   ): Promise<RequestResult> {
-    return await this.send(
-      this.createRequestSetup(path, 'PUT', payload, options)
-    )
+    return await this.send({ url, method: 'PUT', payload, ...options })
   }
 
   public async delete(
-    path: string,
+    url: string,
     payload?: any,
     options?: RequestOptions
   ): Promise<RequestResult> {
-    return await this.send(
-      this.createRequestSetup(path, 'DELETE', payload, options)
-    )
+    return await this.send({ url, method: 'DELETE', payload, ...options })
   }
 
   public async patch(
-    path: string,
+    url: string,
     payload?: any,
     options?: RequestOptions
   ): Promise<RequestResult> {
-    return await this.send(
-      this.createRequestSetup(path, 'PATCH', payload, options)
-    )
+    return await this.send({ url, method: 'PATCH', payload, ...options })
   }
 
   // TODO: validate setup
   public async send(setup: RequestSetup): Promise<RequestResult> {
-    if (setup.abortController.signal.aborted) {
+    if (setup.abortController?.signal.aborted) {
       throw new RequestAbortedError()
     }
 
-    return await this.sendCore(setup)
+    return await this.sendCore(this.createRequestShape(setup))
   }
 
-  private async sendCore(setup: RequestSetup): Promise<RequestResult> {
-    const descriptor = this.createRequestDescriptor(setup)
+  private async sendCore(shape: RequestShape): Promise<RequestResult> {
+    const descriptor = this.createRequestDescriptor(shape)
 
     this.registerRequestAbortionHandler(descriptor)
     this.runRequestRejectionTimeout(descriptor)
 
-    await this.emitRequestEvent(descriptor.setup)
+    await this.emitRequestEvent(descriptor.shape)
 
     try {
       const response = await this.performRequest(descriptor)
 
       const result = await this.createRequestResult(response)
 
-      await this.emitRequestCompletionEvent(result, setup)
+      await this.emitRequestCompletionEvent(result, shape)
 
-      if (!setup.confirmResolve(result)) {
+      if (!shape.confirmResolve(result)) {
         throw new FailedRequestError(
           result,
           `Request failed with status: ${result.status}`
@@ -139,7 +131,7 @@ export class Client implements IClient {
     descriptor: RequestDescriptor
   ): Promise<Response> {
     try {
-      const url = descriptor.setup.url.toString()
+      const url = descriptor.shape.url.toString()
 
       const requestInit = this.createRequestInit(descriptor)
 
@@ -148,7 +140,7 @@ export class Client implements IClient {
       const response = await fetch(url, requestInit)
 
       if (
-        descriptor.setup.confirmRetry(response.status) &&
+        descriptor.shape.confirmRetry(response.status) &&
         this.isRequestRetryPossible(descriptor)
       ) {
         return this.retryRequest(descriptor)
@@ -156,7 +148,7 @@ export class Client implements IClient {
 
       return response
     } catch (error) {
-      if (descriptor.setup.abortController.signal.aborted) {
+      if (descriptor.shape.abortController.signal.aborted) {
         throw new RequestAbortedError()
       }
 
@@ -186,13 +178,13 @@ export class Client implements IClient {
     const originalRetryDelay = this.resolveOriginalRequestRetryDelay(descriptor)
 
     const retryDelayAddition = this.resolveRequestRetryDelayAddition(
-      descriptor.setup
+      descriptor.shape
     )
 
     const retryDelay = originalRetryDelay + retryDelayAddition
 
     await this.emitRequestRetryEvent(
-      descriptor.setup,
+      descriptor.shape,
       originalRetryDelay,
       retryDelay
     )
@@ -203,7 +195,7 @@ export class Client implements IClient {
 
     try {
       await delay(retryDelay, {
-        signal: descriptor.setup.abortController.signal
+        signal: descriptor.shape.abortController.signal
       })
     } catch {
       throw new RequestAbortedError()
@@ -237,9 +229,9 @@ export class Client implements IClient {
     descriptor: RequestDescriptor
   ): boolean {
     return (
-      !descriptor.setup.retryDelays.length ||
+      !descriptor.shape.retryDelays.length ||
       descriptor.context.retryDelayIndex ===
-        descriptor.setup.retryDelays.length - 1
+        descriptor.shape.retryDelays.length - 1
     )
   }
 
@@ -248,20 +240,20 @@ export class Client implements IClient {
   ): boolean {
     return (
       descriptor.context.retriesAfterDelays ===
-      descriptor.setup.maxRetriesAfterDelays
+      descriptor.shape.maxRetriesAfterDelays
     )
   }
 
   private resolveOriginalRequestRetryDelay(
     descriptor: RequestDescriptor
   ): number {
-    return descriptor.setup.retryDelays[descriptor.context.retryDelayIndex]
+    return descriptor.shape.retryDelays[descriptor.context.retryDelayIndex]
   }
 
-  private resolveRequestRetryDelayAddition(setup: RequestSetup): number {
+  private resolveRequestRetryDelayAddition(shape: RequestShape): number {
     return this.generateRandomInt(
-      setup.minRetryDelayAddition,
-      setup.maxRetryDelayAddition
+      shape.minRetryDelayAddition,
+      shape.maxRetryDelayAddition
     )
   }
 
@@ -270,7 +262,7 @@ export class Client implements IClient {
       descriptor.context.attemptAbortController.abort()
     }
 
-    descriptor.setup.abortController.signal.addEventListener(
+    descriptor.shape.abortController.signal.addEventListener(
       'abort',
       descriptor.context.abortionHandler
     )
@@ -279,38 +271,38 @@ export class Client implements IClient {
   private unregisterRequestAbortionHandler(
     descriptor: RequestDescriptor
   ): void {
-    descriptor.setup.abortController.signal.removeEventListener(
+    descriptor.shape.abortController.signal.removeEventListener(
       'abort',
       descriptor.context.abortionHandler
     )
   }
 
   private runRequestRejectionTimeout(descriptor: RequestDescriptor): void {
-    const { rejectionDelay } = descriptor.setup
+    const { rejectionDelay } = descriptor.shape
 
     if (Number.isNaN(rejectionDelay) || rejectionDelay <= 0) {
       return
     }
 
-    descriptor.context.rejectionTimeoutId = (setTimeout(
-      () => descriptor.setup.abortController.abort(),
+    descriptor.context.rejectionTimeoutId = setTimeout(
+      () => descriptor.shape.abortController.abort(),
       rejectionDelay
-    ) as unknown) as number
+    ) as unknown as number
   }
 
   private runRequestAttemptRejectionTimeout(
     descriptor: RequestDescriptor
   ): void {
-    const { attemptRejectionDelay } = descriptor.setup
+    const { attemptRejectionDelay } = descriptor.shape
 
     if (Number.isNaN(attemptRejectionDelay) || attemptRejectionDelay <= 0) {
       return
     }
 
-    descriptor.context.rejectionTimeoutId = (setTimeout(
+    descriptor.context.rejectionTimeoutId = setTimeout(
       () => descriptor.context.attemptAbortController.abort(),
       attemptRejectionDelay
-    ) as unknown) as number
+    ) as unknown as number
   }
 
   private clearRequestRejectionTimeout(context: RequestContext): void {
@@ -321,14 +313,14 @@ export class Client implements IClient {
     clearTimeout(context.attemptRejectionTimeoutId)
   }
 
-  private serializeRequestPayload(setup: RequestSetup): any {
-    if (ObjectHelper.isPlainObject(setup.payload)) {
-      setup.headers.set('Content-Type', 'application/json;charset=UTF-8')
+  private serializeRequestPayload(shape: RequestShape): any {
+    if (ObjectHelper.isPlainObject(shape.payload)) {
+      shape.headers.set('Content-Type', 'application/json;charset=UTF-8')
 
-      return JSON.stringify(setup.payload)
+      return JSON.stringify(shape.payload)
     }
 
-    return setup.payload
+    return shape.payload
   }
 
   private populateHeaders(target: Headers, headers: Headers): void {
@@ -342,13 +334,11 @@ export class Client implements IClient {
     params.forEach((value, name) => target.append(name, value))
   }
 
-  private createRequestSetup(
-    path: string,
-    method: HttpMethod,
-    payload: any,
-    options: RequestOptions = {}
-  ): RequestSetup {
+  private createRequestShape(setup: RequestSetup): RequestShape {
     const {
+      url: rawUrl,
+      method,
+      payload,
       baseUrl = this.requestSettings.baseUrl,
       paramsInit,
       headersInit,
@@ -361,9 +351,9 @@ export class Client implements IClient {
       abortController = new AbortController(),
       confirmRetry = this.requestSettings.confirmRetry,
       confirmResolve = this.requestSettings.confirmResolve
-    } = options
+    } = setup
 
-    const url = new URL(path, baseUrl || undefined) // Replace an empty baseUrl to prevent throwing errors
+    const url = new URL(rawUrl, baseUrl || undefined) // Replace an empty baseUrl to prevent throwing errors
 
     const headers = new Headers(this.requestSettings.headersInit)
 
@@ -401,15 +391,15 @@ export class Client implements IClient {
     }
   }
 
-  private createRequestDescriptor(setup: RequestSetup): RequestDescriptor {
-    return { setup, context: this.createRequestContext() }
+  private createRequestDescriptor(shape: RequestShape): RequestDescriptor {
+    return { shape, context: this.createRequestContext() }
   }
 
   private createRequestInit(descriptor: RequestDescriptor): RequestInit {
     return {
-      method: descriptor.setup.method,
-      headers: descriptor.setup.headers,
-      body: this.serializeRequestPayload(descriptor.setup),
+      method: descriptor.shape.method,
+      headers: descriptor.shape.headers,
+      body: this.serializeRequestPayload(descriptor.shape),
       signal: descriptor.context.attemptAbortController.signal
     }
   }
@@ -425,17 +415,17 @@ export class Client implements IClient {
     }
   }
 
-  private async emitRequestEvent(setup: RequestSetup): Promise<void> {
+  private async emitRequestEvent(shape: RequestShape): Promise<void> {
     if (!this.request.handlers.length) {
       return
     }
 
-    await this.promisfyCallbacks(this.request.handlers, { setup })
+    await this.promisfyCallbacks(this.request.handlers, { shape })
   }
 
   private async emitRequestCompletionEvent(
     result: RequestResult,
-    setup: RequestSetup
+    shape: RequestShape
   ): Promise<void> {
     if (!this.requestCompletion.handlers.length) {
       return
@@ -443,12 +433,12 @@ export class Client implements IClient {
 
     await this.promisfyCallbacks(this.requestCompletion.handlers, {
       result,
-      setup
+      shape
     })
   }
 
   private async emitRequestRetryEvent(
-    setup: RequestSetup,
+    shape: RequestShape,
     delay: number,
     originalDelay: number
   ): Promise<void> {
@@ -457,7 +447,7 @@ export class Client implements IClient {
     }
 
     await this.promisfyCallbacks(this.requestRetry.handlers, {
-      setup,
+      shape,
       context: { delay, originalDelay }
     })
   }

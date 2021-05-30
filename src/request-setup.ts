@@ -1,19 +1,8 @@
 import { HttpMethod } from './http-method'
-import { RequestResolveConfirmationCallback } from './request-resolve-confirmation-callback'
-import { RequestRetryConfirmationCallback } from './request-retry-confirmation-callback'
+import { RequestOptions } from './request-options'
 
-export type RequestSetup<TPayload = any> = {
-  url: URL
+export type RequestSetup<TPayload = any> = RequestOptions & {
+  url: string
   method: HttpMethod
-  headers: Headers
-  payload: TPayload
-  rejectionDelay: number
-  attemptRejectionDelay: number
-  retryDelays: number[]
-  minRetryDelayAddition: number
-  maxRetryDelayAddition: number
-  maxRetriesAfterDelays: number
-  abortController: AbortController
-  confirmRetry: RequestRetryConfirmationCallback
-  confirmResolve: RequestResolveConfirmationCallback
+  payload?: TPayload
 }

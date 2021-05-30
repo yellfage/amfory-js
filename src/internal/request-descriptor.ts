@@ -1,7 +1,7 @@
-import { RequestSetup } from '../request-setup'
+import { RequestShape } from '../request-shape'
 import { RequestContext } from './request-context'
 
 export type RequestDescriptor = {
-  readonly setup: RequestSetup
+  readonly shape: RequestShape
   readonly context: RequestContext
 }

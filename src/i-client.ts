@@ -12,38 +12,40 @@ export interface IClient {
   readonly requestRetry: IEventHandlerStore<RequestRetryEventHandler>
 
   get<TResult = any>(
-    path: string,
+    url: string,
     options?: RequestOptions
   ): Promise<RequestResult<TResult>>
 
   head<TResult = any>(
-    path: string,
+    url: string,
     options?: RequestOptions
   ): Promise<RequestResult<TResult>>
 
   post<TPayload = any, TResult = any>(
-    path: string,
+    url: string,
     payload?: TPayload,
     options?: RequestOptions
   ): Promise<RequestResult<TResult>>
 
   put<TPayload = any, TResult = any>(
-    path: string,
+    url: string,
     payload?: TPayload,
     options?: RequestOptions
   ): Promise<RequestResult<TResult>>
 
   delete<TPayload = any, TResult = any>(
-    path: string,
+    url: string,
     payload?: TPayload,
     options?: RequestOptions
   ): Promise<RequestResult<TResult>>
 
   patch<TPayload = any, TResult = any>(
-    path: string,
+    url: string,
     payload?: TPayload,
     options?: RequestOptions
   ): Promise<RequestResult<TResult>>
 
-  send<TResult = any>(setup: RequestSetup): Promise<RequestResult<TResult>>
+  send<TPayload = any, TResult = any>(
+    setup: RequestSetup<TPayload>
+  ): Promise<RequestResult<TResult>>
 }
