@@ -1,6 +1,8 @@
 import { ClientBuilder } from '../../../src'
 
-const client = new ClientBuilder().build()
+const client = new ClientBuilder().build({
+  request: { baseUrl: 'https://httpbin.org' }
+})
 
 client.request.add(() => console.log('Request'))
 client.requestCompletion.add(() => console.log('Request completion'))
@@ -8,42 +10,41 @@ client.requestRetry.add(() => console.log('Request retry'))
 
 //
 ;(async () => {
-  const resultGet = await client.get<string>('https://httpbin.org/get')
+  // Overwrite base url
+  const firstGetResult = await client.get<string>('', {
+    baseUrl: 'https://httpbin.org/get'
+  })
 
-  console.log('GET', resultGet)
+  console.log(firstGetResult)
 
-  const resultPost = await client.post<Foo, string>(
-    'https://httpbin.org/post',
-    {
-      foo: 'bar'
-    }
-  )
+  // Use a full URL instead of a path
+  const secondGetResultGet = await client.get<string>('https://httpbin.org/get')
 
-  console.log('POST', resultPost)
+  console.log(secondGetResultGet)
 
-  const resultPut = await client.put<Foo, string>('https://httpbin.org/put', {
+  const postResult = await client.post<Foo, string>('/post', {
     foo: 'bar'
   })
 
-  console.log('PUT', resultPut)
+  console.log(postResult)
 
-  const resultDelete = await client.delete<Foo, string>(
-    'https://httpbin.org/delete',
-    {
-      foo: 'bar'
-    }
-  )
+  const putResult = await client.put<Foo, string>('/put', {
+    foo: 'bar'
+  })
 
-  console.log('DELETE', resultDelete)
+  console.log(putResult)
 
-  const resultPatch = await client.patch<Foo, string>(
-    'https://httpbin.org/patch',
-    {
-      foo: 'bar'
-    }
-  )
+  const deleteResult = await client.delete<Foo, string>('/delete', {
+    foo: 'bar'
+  })
 
-  console.log('PATCH', resultPatch)
+  console.log(deleteResult)
+
+  const patchResult = await client.patch<Foo, string>('/patch', {
+    foo: 'bar'
+  })
+
+  console.log(patchResult)
 })()
 
 type Foo = {
