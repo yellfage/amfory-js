@@ -1,15 +1,11 @@
-import { RequestRetryConfirmationCallback } from '../request-retry-confirmation-callback'
 import { RequestResolveConfirmationCallback } from '../request-resolve-confirmation-callback'
+import { IRequestRetryPolicy } from '../i-request-retry-policy'
 
 export type RequestSettings = {
   baseUrl: string
   headersInit: HeadersInit
   rejectionDelay: number
   attemptRejectionDelay: number
-  retryDelays: number[]
-  minRetryDelayAddition: number
-  maxRetryDelayAddition: number
-  maxRetriesAfterDelays: number
-  confirmRetry: RequestRetryConfirmationCallback
+  retryPolicy: IRequestRetryPolicy
   confirmResolve: RequestResolveConfirmationCallback
 }

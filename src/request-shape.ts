@@ -1,6 +1,6 @@
 import { HttpMethod } from './http-method'
+import { IRequestRetryPolicy } from './i-request-retry-policy'
 import { RequestResolveConfirmationCallback } from './request-resolve-confirmation-callback'
-import { RequestRetryConfirmationCallback } from './request-retry-confirmation-callback'
 
 export type RequestShape<TPayload = any> = {
   url: URL
@@ -9,11 +9,7 @@ export type RequestShape<TPayload = any> = {
   payload: TPayload
   rejectionDelay: number
   attemptRejectionDelay: number
-  retryDelays: number[]
-  minRetryDelayAddition: number
-  maxRetryDelayAddition: number
-  maxRetriesAfterDelays: number
+  retryPolicy: IRequestRetryPolicy
   abortController: AbortController
-  confirmRetry: RequestRetryConfirmationCallback
   confirmResolve: RequestResolveConfirmationCallback
 }

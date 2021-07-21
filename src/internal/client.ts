@@ -1,6 +1,7 @@
 /* eslint-disable node/no-callback-literal */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable import/no-named-as-default */
+
 import AbortController from 'abort-controller'
 import delay from 'delay'
 
@@ -122,6 +123,8 @@ export class Client implements IClient {
 
       return result
     } finally {
+      descriptor.shape.retryPolicy.reset()
+
       this.clearRequestRejectionTimeout(descriptor.context)
       this.unregisterRequestAbortionHandler(descriptor)
     }
@@ -140,54 +143,35 @@ export class Client implements IClient {
       const response = await fetch(url, requestInit)
 
       if (
-        descriptor.shape.confirmRetry(response.status) &&
-        this.isRequestRetryPossible(descriptor)
+        descriptor.shape.retryPolicy.confirmRetry(response.status) &&
+        !descriptor.shape.retryPolicy.isMaxRetriesReached()
       ) {
         return this.retryRequest(descriptor)
       }
 
       return response
-    } catch (error) {
-      if (descriptor.shape.abortController.signal.aborted) {
+    } catch {
+      if (
+        descriptor.shape.abortController.signal.aborted ||
+        descriptor.shape.retryPolicy.isMaxRetriesReached()
+      ) {
         throw new RequestAbortedError()
       }
 
       if (descriptor.context.attemptAbortController.signal.aborted) {
-        if (!this.isRequestRetryPossible(descriptor)) {
-          throw new RequestAbortedError()
-        }
-
         descriptor.context.attemptAbortController = new AbortController()
-
-        return this.retryRequest(descriptor)
       }
 
-      throw error
+      return this.retryRequest(descriptor)
     } finally {
       this.clearRequestAttemptRejectionTimeout(descriptor.context)
     }
   }
 
   private async retryRequest(descriptor: RequestDescriptor): Promise<Response> {
-    if (this.arePrimaryRequestRetriesExhausted(descriptor)) {
-      ++descriptor.context.retriesAfterDelays
-    } else {
-      ++descriptor.context.retryDelayIndex
-    }
+    const retryDelay = descriptor.shape.retryPolicy.getNextRetryDelay()
 
-    const originalRetryDelay = this.resolveOriginalRequestRetryDelay(descriptor)
-
-    const retryDelayAddition = this.resolveRequestRetryDelayAddition(
-      descriptor.shape
-    )
-
-    const retryDelay = originalRetryDelay + retryDelayAddition
-
-    await this.emitRequestRetryEvent(
-      descriptor.shape,
-      originalRetryDelay,
-      retryDelay
-    )
+    await this.emitRequestRetryEvent(descriptor.shape, retryDelay)
 
     if (Number.isNaN(retryDelay) || retryDelay <= 0) {
       return this.performRequest(descriptor)
@@ -216,45 +200,6 @@ export class Client implements IClient {
     } else {
       return response.blob()
     }
-  }
-
-  private isRequestRetryPossible(descriptor: RequestDescriptor): boolean {
-    return (
-      !this.arePrimaryRequestRetriesExhausted(descriptor) ||
-      !this.isMaxRequestRetriesAfterDelaysReached(descriptor)
-    )
-  }
-
-  private arePrimaryRequestRetriesExhausted(
-    descriptor: RequestDescriptor
-  ): boolean {
-    return (
-      !descriptor.shape.retryDelays.length ||
-      descriptor.context.retryDelayIndex ===
-        descriptor.shape.retryDelays.length - 1
-    )
-  }
-
-  private isMaxRequestRetriesAfterDelaysReached(
-    descriptor: RequestDescriptor
-  ): boolean {
-    return (
-      descriptor.context.retriesAfterDelays ===
-      descriptor.shape.maxRetriesAfterDelays
-    )
-  }
-
-  private resolveOriginalRequestRetryDelay(
-    descriptor: RequestDescriptor
-  ): number {
-    return descriptor.shape.retryDelays[descriptor.context.retryDelayIndex]
-  }
-
-  private resolveRequestRetryDelayAddition(shape: RequestShape): number {
-    return this.generateRandomInt(
-      shape.minRetryDelayAddition,
-      shape.maxRetryDelayAddition
-    )
   }
 
   private registerRequestAbortionHandler(descriptor: RequestDescriptor): void {
@@ -344,12 +289,8 @@ export class Client implements IClient {
       headersInit,
       rejectionDelay = this.requestSettings.rejectionDelay,
       attemptRejectionDelay = this.requestSettings.attemptRejectionDelay,
-      retryDelays = this.requestSettings.retryDelays,
-      minRetryDelayAddition = this.requestSettings.minRetryDelayAddition,
-      maxRetryDelayAddition = this.requestSettings.maxRetryDelayAddition,
-      maxRetriesAfterDelays = this.requestSettings.maxRetriesAfterDelays,
+      retryPolicy = this.requestSettings.retryPolicy,
       abortController = new AbortController(),
-      confirmRetry = this.requestSettings.confirmRetry,
       confirmResolve = this.requestSettings.confirmResolve
     } = setup
 
@@ -367,21 +308,14 @@ export class Client implements IClient {
       payload,
       rejectionDelay,
       attemptRejectionDelay,
-      retryDelays,
-      minRetryDelayAddition,
-      maxRetryDelayAddition,
-      maxRetriesAfterDelays,
+      retryPolicy,
       abortController,
-      confirmRetry,
       confirmResolve
     }
   }
 
   private createRequestContext(): RequestContext {
     return {
-      retryDelayIndex: -1,
-      totalRetries: 0,
-      retriesAfterDelays: 0,
       attemptAbortController: new AbortController(),
       rejectionTimeoutId: 0,
       attemptRejectionTimeoutId: 0,
@@ -439,8 +373,7 @@ export class Client implements IClient {
 
   private async emitRequestRetryEvent(
     shape: RequestShape,
-    delay: number,
-    originalDelay: number
+    delay: number
   ): Promise<void> {
     if (!this.requestCompletion.handlers.length) {
       return
@@ -448,7 +381,7 @@ export class Client implements IClient {
 
     await this.promisfyCallbacks(this.requestRetry.handlers, {
       shape,
-      context: { delay, originalDelay }
+      context: { delay }
     })
   }
 
@@ -459,9 +392,5 @@ export class Client implements IClient {
     return Promise.all(
       callbacks.map((callback) => Promise.resolve(callback(...args)))
     )
-  }
-
-  private generateRandomInt(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min
   }
 }
