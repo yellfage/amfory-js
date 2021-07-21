@@ -299,7 +299,7 @@ export class Client implements IClient {
       return
     }
 
-    descriptor.context.rejectionTimeoutId = setTimeout(
+    descriptor.context.attemptRejectionTimeoutId = setTimeout(
       () => descriptor.context.attemptAbortController.abort(),
       attemptRejectionDelay
     ) as unknown as number
