@@ -115,10 +115,7 @@ export class Client implements IClient {
       await this.emitRequestCompletionEvent(result, shape)
 
       if (!shape.confirmResolve(result)) {
-        throw new FailedRequestError(
-          result,
-          `Request failed with status: ${result.status}`
-        )
+        throw new FailedRequestError(result)
       }
 
       return result
