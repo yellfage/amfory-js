@@ -148,11 +148,12 @@ export class Client implements IClient {
 
       return result
     } catch (error) {
-      if (
-        descriptor.shape.abortController.signal.aborted ||
-        descriptor.shape.retryPolicy.isMaxRetriesReached()
-      ) {
+      if (descriptor.shape.abortController.signal.aborted) {
         throw new RequestAbortedError()
+      }
+
+      if (descriptor.shape.retryPolicy.isMaxRetriesReached()) {
+        throw error
       }
 
       if (descriptor.context.attemptAbortController.signal.aborted) {
