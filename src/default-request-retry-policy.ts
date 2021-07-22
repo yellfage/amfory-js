@@ -5,7 +5,7 @@ import { RequestResult } from './request-result'
 
 import { HttpStatus } from './http-status'
 
-const RETRYABLE_STATUSES: HttpStatus[] = [
+const RETRYABLE_HTTP_STATUSES: HttpStatus[] = [
   HttpStatus.RequestTimeout,
   HttpStatus.InternalServerError,
   HttpStatus.ServiceUnavailable,
@@ -37,7 +37,7 @@ export class DefaultRequestRetryPolicy implements IRequestRetryPolicy {
     minRetryDelayAddition = 0,
     maxRetryDelayAddition = 0,
     maxRetriesAfterDelays = 0,
-    confirmRetry = (result) => RETRYABLE_STATUSES.includes(result.status)
+    confirmRetry = (result) => RETRYABLE_HTTP_STATUSES.includes(result.status)
   }: DefaultRetryRequestPolicyOptions = {}) {
     this.retryDelays = retryDelays
     this.minRetryDelayAddition = minRetryDelayAddition
