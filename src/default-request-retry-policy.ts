@@ -7,7 +7,6 @@ import { HttpStatus } from './http-status'
 
 const RETRYABLE_STATUSES: HttpStatus[] = [
   HttpStatus.RequestTimeout,
-  HttpStatus.ClientClosedRequest,
   HttpStatus.InternalServerError,
   HttpStatus.ServiceUnavailable,
   HttpStatus.GatewayTimeout,
