@@ -5,7 +5,10 @@ import { RequestResult } from './request-result'
 
 import { HttpStatus } from './http-status'
 
-const RETRYABLE_HTTP_STATUSES: HttpStatus[] = [
+const DEFAULT_RETRY_DELAY_INDEX = -1
+const DEFAULT_RETRIES_AFTER_DELAYS = 0
+
+export const RETRYABLE_HTTP_STATUSES: HttpStatus[] = [
   HttpStatus.RequestTimeout,
   HttpStatus.InternalServerError,
   HttpStatus.ServiceUnavailable,
@@ -18,9 +21,6 @@ const RETRYABLE_HTTP_STATUSES: HttpStatus[] = [
   HttpStatus.OriginIsUnreachable,
   HttpStatus.TimeoutOccurred
 ]
-
-const DEFAULT_RETRY_DELAY_INDEX = -1
-const DEFAULT_RETRIES_AFTER_DELAYS = 0
 
 export class DefaultRequestRetryPolicy implements IRequestRetryPolicy {
   private readonly retryDelays: number[]
