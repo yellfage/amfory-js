@@ -1,6 +1,7 @@
 import { DefaultRetryRequestPolicyOptions } from './default-retry-request-policy-options'
 import { IRequestRetryPolicy } from './i-request-retry-policy'
 import { RequestRetryConfirmationCallback } from './request-retry-confirmation-callback'
+import { RequestResult } from './request-result'
 
 import { HttpStatus } from './http-status'
 
@@ -37,7 +38,7 @@ export class DefaultRequestRetryPolicy implements IRequestRetryPolicy {
     minRetryDelayAddition = 0,
     maxRetryDelayAddition = 0,
     maxRetriesAfterDelays = 0,
-    confirmRetry = (status) => RETRYABLE_STATUSES.includes(status)
+    confirmRetry = (result) => RETRYABLE_STATUSES.includes(result.status)
   }: DefaultRetryRequestPolicyOptions = {}) {
     this.retryDelays = retryDelays
     this.minRetryDelayAddition = minRetryDelayAddition
@@ -49,8 +50,8 @@ export class DefaultRequestRetryPolicy implements IRequestRetryPolicy {
     this.retriesAfterDelays = DEFAULT_RETRIES_AFTER_DELAYS
   }
 
-  public confirmRetry(status: HttpStatus): boolean {
-    return this.confirmRetryCallback(status)
+  public confirmRetry(result: RequestResult): boolean {
+    return this.confirmRetryCallback(result)
   }
 
   public isMaxRetriesReached(): boolean {

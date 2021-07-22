@@ -108,9 +108,7 @@ export class Client implements IClient {
     await this.emitRequestEvent(descriptor.shape)
 
     try {
-      const response = await this.performRequest(descriptor)
-
-      const result = await this.createRequestResult(response)
+      const result = await this.performRequest(descriptor)
 
       await this.emitRequestCompletionEvent(result, shape)
 
@@ -129,7 +127,7 @@ export class Client implements IClient {
 
   private async performRequest(
     descriptor: RequestDescriptor
-  ): Promise<Response> {
+  ): Promise<RequestResult> {
     try {
       const url = descriptor.shape.url.toString()
 
@@ -139,14 +137,16 @@ export class Client implements IClient {
 
       const response = await fetch(url, requestInit)
 
+      const result = await this.createRequestResult(response)
+
       if (
-        descriptor.shape.retryPolicy.confirmRetry(response.status) &&
+        descriptor.shape.retryPolicy.confirmRetry(result) &&
         !descriptor.shape.retryPolicy.isMaxRetriesReached()
       ) {
         return this.retryRequest(descriptor)
       }
 
-      return response
+      return result
     } catch {
       if (
         descriptor.shape.abortController.signal.aborted ||
@@ -165,7 +165,9 @@ export class Client implements IClient {
     }
   }
 
-  private async retryRequest(descriptor: RequestDescriptor): Promise<Response> {
+  private async retryRequest(
+    descriptor: RequestDescriptor
+  ): Promise<RequestResult> {
     const retryDelay = descriptor.shape.retryPolicy.getNextRetryDelay()
 
     await this.emitRequestRetryEvent(descriptor.shape, retryDelay)
