@@ -143,11 +143,11 @@ export class Client implements IClient {
         descriptor.shape.retryPolicy.confirmRetry(result) &&
         !descriptor.shape.retryPolicy.isMaxRetriesReached()
       ) {
-        return this.retryRequest(descriptor)
+        return this.retryRequest(descriptor, new FailedRequestError(result))
       }
 
       return result
-    } catch {
+    } catch (error) {
       if (
         descriptor.shape.abortController.signal.aborted ||
         descriptor.shape.retryPolicy.isMaxRetriesReached()
@@ -159,18 +159,19 @@ export class Client implements IClient {
         descriptor.context.attemptAbortController = new AbortController()
       }
 
-      return this.retryRequest(descriptor)
+      return this.retryRequest(descriptor, error)
     } finally {
       this.clearRequestAttemptRejectionTimeout(descriptor.context)
     }
   }
 
   private async retryRequest(
-    descriptor: RequestDescriptor
+    descriptor: RequestDescriptor,
+    error: Error
   ): Promise<RequestResult> {
     const retryDelay = descriptor.shape.retryPolicy.getNextRetryDelay()
 
-    await this.emitRequestRetryEvent(descriptor.shape, retryDelay)
+    await this.emitRequestRetryEvent(descriptor.shape, error, retryDelay)
 
     if (Number.isNaN(retryDelay) || retryDelay <= 0) {
       return this.performRequest(descriptor)
@@ -372,6 +373,7 @@ export class Client implements IClient {
 
   private async emitRequestRetryEvent(
     shape: RequestShape,
+    error: Error,
     delay: number
   ): Promise<void> {
     if (!this.requestCompletion.handlers.length) {
@@ -380,7 +382,8 @@ export class Client implements IClient {
 
     await this.promisfyCallbacks(this.requestRetry.handlers, {
       shape,
-      context: { delay }
+      context: { delay },
+      error
     })
   }
 

@@ -4,4 +4,5 @@ import { RequestRetryContext } from './request-retry-context'
 export type RequestRetryEvent<TPayload = any> = {
   readonly shape: RequestShape<TPayload>
   readonly context: RequestRetryContext
+  readonly error: Error
 }
