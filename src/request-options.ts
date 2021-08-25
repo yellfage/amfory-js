@@ -1,13 +1,15 @@
-import { IRequestRetryPolicy } from './i-request-retry-policy'
-import { RequestResolveConfirmationCallback } from './request-resolve-confirmation-callback'
+import {
+  RequestRetryPolicy,
+  RequestResolveConfirmationCallback
+} from './configuration'
 
-export type RequestOptions = {
+export interface RequestOptions {
   baseUrl?: string
-  paramsInit?: string | string[][] | Record<string, string> | URLSearchParams
-  headersInit?: HeadersInit
+  params?: string | string[][] | Record<string, string> | URLSearchParams
+  headers?: HeadersInit
   rejectionDelay?: number
   attemptRejectionDelay?: number
-  retryPolicy?: IRequestRetryPolicy
+  retryPolicy?: RequestRetryPolicy
   abortController?: AbortController
   confirmResolve?: RequestResolveConfirmationCallback
 }

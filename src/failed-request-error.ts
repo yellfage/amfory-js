@@ -1,16 +1,19 @@
 import { RequestResult } from './request-result'
 
 export class FailedRequestError extends Error {
-  public result: RequestResult
+  private result: RequestResult
 
-  public constructor(
-    result: RequestResult,
-    message = `Request failed with status: ${result.status}`
-  ) {
-    super(message)
+  public constructor(result: RequestResult) {
+    super(
+      `Request failed. Status: ${result.status}. Status text: ${result.statusText}`
+    )
 
     super.name = 'FailedRequestError'
 
     this.result = result
+  }
+
+  public getResult<TData = any>(): RequestResult<TData> {
+    return this.result
   }
 }

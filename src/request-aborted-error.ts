@@ -1,7 +1,5 @@
-import { OperationAbortedError } from './operation-aborted-error'
-
-export class RequestAbortedError extends OperationAbortedError {
-  public constructor(message = 'Request aborted') {
+export class RequestAbortedError extends Error {
+  public constructor(message = 'The request aborted') {
     super(message)
 
     super.name = 'RequestAbortedError'

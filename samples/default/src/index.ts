@@ -1,59 +1,51 @@
-import { ClientBuilder } from '../../../src'
+import { ElvyClientFactory } from '../../../src'
 
-const client = new ClientBuilder().build({
-  request: { baseUrl: 'https://httpbin.org' }
+const client = new ElvyClientFactory().create((options) => {
+  options.request.baseUrl = 'https://httpbin.org'
 })
 
-client.request.add(() => console.log('Request'))
-client.requestCompletion.add(() => console.log('Request completion'))
-client.requestRetry.add(() => console.log('Request retry'))
-
+client.on('request', (event) => console.log('Request', event))
+client.on('result', (event) => console.log('Request Result', event))
+client.on('retry', (event) => console.log('Request Retry', event))
 //
 ;(async () => {
-  // Overwrite base url
-  const firstGetResult = await client.get<string>('', {
-    baseUrl: 'https://httpbin.org/get'
-  })
+  // You can use a full URL instead of a path
+  const getResult = await client.get('https://httpbin.org/get')
 
-  console.log(firstGetResult)
+  console.log(getResult)
 
-  // Use a full URL instead of a path
-  const secondGetResultGet = await client.get<string>('https://httpbin.org/get')
-
-  console.log(secondGetResultGet)
-
-  const postResult = await client.post<Foo, string>('/post', {
-    foo: 'bar'
+  const postResult = await client.post<Foo>('/post', {
+    bar: 'baz'
   })
 
   console.log(postResult)
 
-  const putResult = await client.put<Foo, string>('/put', {
-    foo: 'bar'
+  const putResult = await client.put<Foo>('/put', {
+    bar: 'baz'
   })
 
   console.log(putResult)
 
-  const deleteResult = await client.delete<Foo, string>('/delete', {
-    foo: 'bar'
+  const deleteResult = await client.delete<Foo>('/delete', {
+    bar: 'baz'
   })
 
   console.log(deleteResult)
 
-  const patchResult = await client.patch<Foo, string>('/patch', {
-    foo: 'bar'
+  const patchResult = await client.patch<Foo>('/patch', {
+    bar: 'baz'
   })
 
   console.log(patchResult)
 
-  const sendResult = await client.send<Foo, string>({
+  const requestResult = await client.request<Foo>({
     url: '/get',
     method: 'GET'
   })
 
-  console.log(sendResult)
+  console.log(requestResult)
 })()
 
 type Foo = {
-  foo: string
+  bar: string
 }

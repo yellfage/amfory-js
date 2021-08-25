@@ -1,8 +1,7 @@
 import { RequestShape } from './request-shape'
 import { RequestRetryContext } from './request-retry-context'
 
-export type RequestRetryEvent<TPayload = any> = {
-  readonly shape: RequestShape<TPayload>
+export interface RequestRetryEvent {
+  readonly shape: RequestShape
   readonly context: RequestRetryContext
-  readonly error: Error
 }
