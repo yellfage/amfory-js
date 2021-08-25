@@ -6,13 +6,13 @@ import {
 } from './configuration'
 
 export interface RequestShape<TPayload = any> {
-  url: URL
-  method: HttpMethod
-  headers: Headers
-  payload: TPayload
-  rejectionDelay: number
-  attemptRejectionDelay: number
-  retryPolicy: RequestRetryPolicy
-  abortController: AbortController
-  confirmResolve: RequestResolveConfirmationCallback
+  readonly url: URL
+  readonly method: HttpMethod
+  readonly headers: Headers
+  readonly payload: TPayload
+  readonly rejectionDelay: number
+  readonly attemptRejectionDelay: number
+  readonly retryPolicy: RequestRetryPolicy
+  readonly abortController: AbortController
+  readonly confirmResolve: RequestResolveConfirmationCallback
 }
