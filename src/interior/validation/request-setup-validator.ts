@@ -4,16 +4,14 @@ import { NumberUtils } from '../number-utils'
 import { FunctionUtils } from '../function-utils'
 
 export class RequestSetupValidator {
-  public static validate(setup: RequestSetup): void {
-    const {
-      url,
-      method,
-      baseUrl,
-      rejectionDelay,
-      attemptRejectionDelay,
-      confirmResolve
-    } = setup
-
+  public static validate({
+    url,
+    method,
+    baseUrl,
+    rejectionDelay,
+    attemptRejectionDelay,
+    confirmResolve
+  }: RequestSetup): void {
     if (!StringUtils.isString(url)) {
       throw TypeError('Invalid request setup: the "url" field must be a string')
     }

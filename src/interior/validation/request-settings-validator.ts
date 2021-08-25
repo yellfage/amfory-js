@@ -4,16 +4,14 @@ import { NumberUtils } from '../number-utils'
 import { FunctionUtils } from '../function-utils'
 
 export class RequestSettingsValidator {
-  public static validate(settings: RequestSettings): void {
-    const {
-      baseUrl,
-      headers,
-      rejectionDelay,
-      attemptRejectionDelay,
-      retryPolicy,
-      confirmResolve
-    } = settings
-
+  public static validate({
+    baseUrl,
+    headers,
+    rejectionDelay,
+    attemptRejectionDelay,
+    retryPolicy,
+    confirmResolve
+  }: RequestSettings): void {
     if (!StringUtils.isString(baseUrl)) {
       throw TypeError(
         'Invalid request settings: the "baseUrl" field must be a string'

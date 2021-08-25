@@ -2,15 +2,13 @@ import { DefaultRequestRetryPolicyOptions } from '../../configuration/default-re
 import { NumberUtils } from '../number-utils'
 
 export class DefaultRequestRetryPolicyOptionsValidator {
-  public static validate(options: DefaultRequestRetryPolicyOptions): void {
-    const {
-      delays,
-      minDelayOffset,
-      maxDelayOffset,
-      maxRetriesAfterDelays,
-      retryableStatuses
-    } = options
-
+  public static validate({
+    delays,
+    minDelayOffset,
+    maxDelayOffset,
+    maxRetriesAfterDelays,
+    retryableStatuses
+  }: DefaultRequestRetryPolicyOptions): void {
     if (delays !== undefined && !Array.isArray(delays)) {
       throw TypeError(
         'Invalid default request retry policy options: the "delays" field must be an array'
