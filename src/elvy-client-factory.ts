@@ -15,9 +15,9 @@ import {
 
 export class ElvyClientFactory {
   public create(
-    configure?: (options: ElvyClientFactoryOptions) => void
+    configure: (options: ElvyClientFactoryOptions) => void = () => {}
   ): ElvyClient {
-    if (configure != null && !isFunction(configure)) {
+    if (!isFunction(configure)) {
       throw new TypeError(
         'Invalid type of the "configure" parameter. Expected type: function'
       )
@@ -25,9 +25,7 @@ export class ElvyClientFactory {
 
     const options = new ElvyClientFactoryOptions()
 
-    if (configure) {
-      configure(options)
-    }
+    configure(options)
 
     validateElvyClientFactoryOptions(options)
 
