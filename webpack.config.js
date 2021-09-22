@@ -18,7 +18,11 @@ module.exports = {
     path: OUTPUT_PATH,
     libraryTarget: 'commonjs2'
   },
-  externals: ['abort-controller/polyfill', 'cross-fetch/polyfill'],
+  externals: [
+    'core-js/web/url',
+    'abort-controller/polyfill',
+    'cross-fetch/polyfill'
+  ],
   resolve: {
     extensions: ['.ts', '.js']
   },
@@ -30,20 +34,6 @@ module.exports = {
         test: /\.ts$/,
         include: [SRC_PATH],
         use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    useBuiltIns: 'usage',
-                    corejs: 3
-                  }
-                ]
-              ]
-            }
-          },
           {
             loader: 'ts-loader',
             options: {
