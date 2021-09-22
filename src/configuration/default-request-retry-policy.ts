@@ -1,7 +1,11 @@
-import { HttpStatus } from '../http-status'
-import { DefaultRequestRetryPolicyOptions } from './default-request-retry-policy-options'
-import { RequestRetryPolicy } from './request-retry-policy'
-import { DefaultRequestRetryPolicyOptionsValidator } from '../interior/validation/default-request-retry-policy-options-validator'
+import type { HttpStatus } from '../http-status'
+
+import { validateDefaultRequestRetryPolicyOptions } from '../interior'
+
+import type { DefaultRequestRetryPolicyOptions } from './default-request-retry-policy-options'
+
+import type { RequestRetryPolicy } from './request-retry-policy'
+
 import { RETRYABLE_HTTP_STATUSES } from './retryable-http-statuses'
 
 const DEFAULT_DELAY_INDEX = -1
@@ -9,16 +13,21 @@ const DEFAULT_RETRIES_AFTER_DELAYS = 0
 
 export class DefaultRequestRetryPolicy implements RequestRetryPolicy {
   private readonly delays: number[]
+
   private readonly minDelayOffset: number
+
   private readonly maxDelayOffset: number
+
   private readonly maxRetriesAfterDelays: number
+
   private readonly retryableStatuses: HttpStatus[]
 
   private delayIndex: number
+
   private retriesAfterDelays: number
 
   public constructor(options: DefaultRequestRetryPolicyOptions = {}) {
-    DefaultRequestRetryPolicyOptionsValidator.validate(options)
+    validateDefaultRequestRetryPolicyOptions(options)
 
     const {
       delays = [1000, 2000, 5000],
@@ -50,9 +59,9 @@ export class DefaultRequestRetryPolicy implements RequestRetryPolicy {
 
   public getNextDelay(): number {
     if (this.arePrimaryRetriesExhausted()) {
-      ++this.retriesAfterDelays
+      this.retriesAfterDelays += 1
     } else {
-      ++this.delayIndex
+      this.delayIndex += 1
     }
 
     const delay = this.delays[this.delayIndex] || 0
@@ -74,7 +83,7 @@ export class DefaultRequestRetryPolicy implements RequestRetryPolicy {
     return !this.delays.length || this.delayIndex === this.delays.length - 1
   }
 
-  private areSecondaryRetriesExhausted() {
+  private areSecondaryRetriesExhausted(): boolean {
     return this.retriesAfterDelays === this.maxRetriesAfterDelays
   }
 

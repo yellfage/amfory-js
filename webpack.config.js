@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const { DefinePlugin } = require('webpack')
 const ForkTsCheckerPlugin = require('fork-ts-checker-webpack-plugin')
 const path = require('path')

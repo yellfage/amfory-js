@@ -1,11 +1,11 @@
-import { HttpMethod } from './http-method'
-
-import {
+import type {
   RequestRetryPolicy,
   RequestResolveConfirmationCallback
 } from './configuration'
 
-export interface RequestShape<TPayload = any> {
+import type { HttpMethod } from './http-method'
+
+export interface RequestShape<TPayload = unknown> {
   readonly url: URL
   readonly method: HttpMethod
   readonly headers: Headers

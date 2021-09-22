@@ -1,18 +1,24 @@
-import {
+import type {
   RequestRetryPolicy,
   RequestResolveConfirmationCallback
 } from '../configuration'
 
-import { RequestSetup } from '../request-setup'
-import { RequestShape } from '../request-shape'
+import type { RequestSetup } from '../request-setup'
+
+import type { RequestShape } from '../request-shape'
 
 export class RequestShapeFactory {
-  private defaultBaseUrl: string
-  private defaultRejectionDelay: number
-  private defaultAttemptRejectionDelay: number
-  private defaultRetryPolicy: RequestRetryPolicy
-  private defaultHeadersInit: HeadersInit
-  private defaultConfirmResolve: RequestResolveConfirmationCallback
+  private readonly defaultBaseUrl: string
+
+  private readonly defaultRejectionDelay: number
+
+  private readonly defaultAttemptRejectionDelay: number
+
+  private readonly defaultRetryPolicy: RequestRetryPolicy
+
+  private readonly defaultHeadersInit: HeadersInit
+
+  private readonly defaultConfirmResolve: RequestResolveConfirmationCallback
 
   public constructor(
     defaultBaseUrl: string,
@@ -43,6 +49,7 @@ export class RequestShapeFactory {
     abortController = new AbortController(),
     confirmResolve = this.defaultConfirmResolve
   }: RequestSetup): RequestShape {
+    // eslint-disable-next-line no-undefined
     const funalUrl = new URL(url, baseUrl || undefined)
 
     const finalHeaders = new Headers(this.defaultHeadersInit)

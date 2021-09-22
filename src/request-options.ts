@@ -1,4 +1,4 @@
-import {
+import type {
   RequestRetryPolicy,
   RequestResolveConfirmationCallback
 } from './configuration'

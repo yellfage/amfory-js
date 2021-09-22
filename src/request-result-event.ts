@@ -1,5 +1,6 @@
-import { RequestShape } from './request-shape'
-import { RequestResult } from './request-result'
+import type { RequestResult } from './request-result'
+
+import type { RequestShape } from './request-shape'
 
 export interface RequestResultEvent {
   readonly shape: RequestShape

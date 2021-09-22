@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
-import { Logger } from './logger'
+/* eslint-disable no-console */
 
 import { LogLevel } from './log-level'
+
+import type { Logger } from './logger'
 
 export class DefaultLogger implements Logger {
   private readonly logLevel: LogLevel
@@ -11,27 +11,27 @@ export class DefaultLogger implements Logger {
     this.logLevel = logLevel
   }
 
-  public logTrace(message: any): any {
+  public logTrace(message: unknown): void {
     this.log(LogLevel.Trace, message)
   }
 
-  public logDebug(message: any): any {
+  public logDebug(message: unknown): void {
     this.log(LogLevel.Debug, message)
   }
 
-  public logInformation(message: any): any {
+  public logInformation(message: unknown): void {
     this.log(LogLevel.Information, message)
   }
 
-  public logWarning(message: any): any {
+  public logWarning(message: unknown): void {
     this.log(LogLevel.Warning, message)
   }
 
-  public logError(message: any): any {
+  public logError(message: unknown): void {
     this.log(LogLevel.Error, message)
   }
 
-  private log(logLevel: LogLevel, message: any) {
+  private log(logLevel: LogLevel, message: unknown): void {
     if (!this.isEnabled(logLevel)) {
       return
     }
@@ -61,6 +61,9 @@ export class DefaultLogger implements Logger {
         console.error(message)
 
         break
+
+      default:
+        console.info(message)
     }
   }
 

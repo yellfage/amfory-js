@@ -1,7 +1,8 @@
-import { HttpMethod } from './http-method'
-import { RequestOptions } from './request-options'
+import type { HttpMethod } from './http-method'
 
-export interface RequestSetup<TPayload = any> extends RequestOptions {
+import type { RequestOptions } from './request-options'
+
+export interface RequestSetup<TPayload = unknown> extends RequestOptions {
   url: string
   method: HttpMethod
   payload?: TPayload

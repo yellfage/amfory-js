@@ -1,22 +1,23 @@
+import type { ElvyClient } from './elvy-client'
+
 import { ElvyClientFactoryOptions } from './elvy-client-factory-options'
-import { ElvyClient } from './elvy-client'
+
+import type { Events } from './events'
 
 import {
-  FunctionUtils,
   EventEmitter,
   RequestShapeFactory,
   Client,
-  ElvyClientFactoryOptionsValidator,
-  RequestFactory
+  RequestFactory,
+  isFunction,
+  validateElvyClientFactoryOptions
 } from './interior'
-
-import { Events } from './events'
 
 export class ElvyClientFactory {
   public create(
     configure?: (options: ElvyClientFactoryOptions) => void
   ): ElvyClient {
-    if (configure !== undefined && !FunctionUtils.isFunction(configure)) {
+    if (configure != null && !isFunction(configure)) {
       throw new TypeError(
         'Invalid type of the "configure" parameter. Expected type: function'
       )
@@ -28,7 +29,7 @@ export class ElvyClientFactory {
       configure(options)
     }
 
-    ElvyClientFactoryOptionsValidator.validate(options)
+    validateElvyClientFactoryOptions(options)
 
     return this.createCore(options)
   }

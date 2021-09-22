@@ -1,54 +1,54 @@
-import { Events } from './events'
-import { RequestOptions } from './request-options'
-import { RequestResult } from './request-result'
-import { RequestSetup } from './request-setup'
+import type { Events } from './events'
+
+import type { RequestOptions } from './request-options'
+
+import type { RequestResult } from './request-result'
+
+import type { RequestSetup } from './request-setup'
 
 export interface ElvyClient {
-  on<TEventName extends keyof Events>(
+  on: <TEventName extends keyof Events>(
     eventName: TEventName,
     handler: Events[TEventName]
-  ): Events[TEventName]
+  ) => Events[TEventName]
 
-  off<TEventName extends keyof Events>(
+  off: <TEventName extends keyof Events>(
     eventName: TEventName,
     handler: Events[TEventName]
-  ): void
+  ) => void
 
-  get<TResult = any>(
+  get: <TResult = unknown>(
     url: string,
     options?: RequestOptions
-  ): Promise<RequestResult<TResult>>
+  ) => Promise<RequestResult<TResult>>
 
-  head<TResult = any>(
-    url: string,
-    options?: RequestOptions
-  ): Promise<RequestResult<TResult>>
+  head: (url: string, options?: RequestOptions) => Promise<RequestResult>
 
-  post<TPayload = any, TResult = any>(
+  post: <TPayload = unknown, TResult = unknown>(
     url: string,
     payload?: TPayload,
     options?: RequestOptions
-  ): Promise<RequestResult<TResult>>
+  ) => Promise<RequestResult<TResult>>
 
-  put<TPayload = any, TResult = any>(
+  put: <TPayload = unknown, TResult = unknown>(
     url: string,
     payload?: TPayload,
     options?: RequestOptions
-  ): Promise<RequestResult<TResult>>
+  ) => Promise<RequestResult<TResult>>
 
-  delete<TPayload = any, TResult = any>(
+  delete: <TPayload = unknown, TResult = unknown>(
     url: string,
     payload?: TPayload,
     options?: RequestOptions
-  ): Promise<RequestResult<TResult>>
+  ) => Promise<RequestResult<TResult>>
 
-  patch<TPayload = any, TResult = any>(
+  patch: <TPayload = unknown, TResult = unknown>(
     url: string,
     payload?: TPayload,
     options?: RequestOptions
-  ): Promise<RequestResult<TResult>>
+  ) => Promise<RequestResult<TResult>>
 
-  request<TPayload = any, TResult = any>(
+  request: <TPayload = unknown, TResult = unknown>(
     setup: RequestSetup<TPayload>
-  ): Promise<RequestResult<TResult>>
+  ) => Promise<RequestResult<TResult>>
 }

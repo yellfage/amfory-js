@@ -1,6 +1,6 @@
-import { HttpStatus } from './http-status'
+import type { HttpStatus } from './http-status'
 
-export interface RequestResult<TData = any> {
+export interface RequestResult<TData = unknown> {
   headers: Headers
   status: HttpStatus
   statusText: string

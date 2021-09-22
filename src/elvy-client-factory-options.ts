@@ -2,6 +2,7 @@ import { LoggingSettings, RequestSettings } from './configuration'
 
 export class ElvyClientFactoryOptions {
   public logging: LoggingSettings
+
   public request: RequestSettings
 
   public constructor(

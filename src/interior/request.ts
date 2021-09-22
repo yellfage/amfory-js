@@ -1,23 +1,36 @@
 import delay from 'delay'
 
-import { RequestShape } from '../request-shape'
-import { Logger } from '../logging'
-import { EventEmitter } from './event-emitter'
-import { Events } from '../events'
-import { RequestResult } from '../request-result'
+import type { Events } from '../events'
+
 import { FailedRequestError } from '../failed-request-error'
+
+import type { Logger } from '../logging'
+
 import { RequestAbortedError } from '../request-aborted-error'
 
-import { ObjectUtils } from './object-utils'
-import { NumberUtils } from './number-utils'
+import type { RequestResult } from '../request-result'
+
+import type { RequestShape } from '../request-shape'
+
+import type { EventEmitter } from './event-emitter'
+
+import { isNumber } from './is-number'
+
+import { isPlainObject } from './is-plain-object'
 
 export class Request {
-  private shape: RequestShape
-  private logger: Logger
-  private eventEmitter: EventEmitter<Events>
+  private readonly shape: RequestShape
+
+  private readonly logger: Logger
+
+  private readonly eventEmitter: EventEmitter<Events>
+
   private attemptAbortController: AbortController
+
   private rejectionTimeoutId: number
+
   private attemptRejectionTimeoutId: number
+
   private retries: number
 
   public constructor(
@@ -34,7 +47,7 @@ export class Request {
     this.retries = 0
   }
 
-  public async perform(): Promise<RequestResult> {
+  public async perform<TResult>(): Promise<RequestResult<TResult>> {
     if (this.shape.abortController.signal.aborted) {
       throw new Error(
         'Unable to perform the request: the provided AbortController is already aborted'
@@ -48,7 +61,7 @@ export class Request {
     await this.eventEmitter.emit('request', { shape: this.shape })
 
     try {
-      const result = await this.performAttempt()
+      const result = await this.performAttempt<TResult>()
 
       await this.eventEmitter.emit('result', { shape: this.shape, result })
 
@@ -66,28 +79,28 @@ export class Request {
     }
   }
 
-  private async performAttempt(): Promise<RequestResult> {
+  private async performAttempt<TResult>(): Promise<RequestResult<TResult>> {
     try {
       this.runAttemptRejectionTimeout()
 
       const response = await fetch(this.shape.url.toString(), {
         method: this.shape.method,
         headers: this.shape.headers,
-        body: this.serializePayload(),
+        body: this.serializePayload() as string,
         signal: this.attemptAbortController.signal
       })
 
       if (this.shape.retryPolicy.confirmStatus(response.status)) {
-        return this.performRetry()
+        return await this.performRetry<TResult>()
       }
 
       return {
         headers: response.headers,
         status: response.status,
         statusText: response.statusText,
-        data: await this.readResponseBody(response)
+        data: (await this.readResponseBody(response)) as TResult
       }
-    } catch (error) {
+    } catch (error: unknown) {
       if (this.shape.abortController.signal.aborted) {
         throw new RequestAbortedError()
       }
@@ -99,21 +112,21 @@ export class Request {
       if (this.attemptAbortController.signal.aborted) {
         this.attemptAbortController = new AbortController()
       } else {
-        this.logger.logError(`Unable to perform the request: ${error}`)
+        this.logger.logError(error)
       }
 
-      return this.performRetry()
+      return await this.performRetry()
     } finally {
       this.clearAttemptRejectionTimeout()
     }
   }
 
-  private async performRetry(): Promise<RequestResult> {
-    ++this.retries
+  private async performRetry<TResult>(): Promise<RequestResult<TResult>> {
+    this.retries += 1
 
     const retryDelay = this.shape.retryPolicy.getNextDelay(this.retries)
 
-    if (!NumberUtils.isNumber(retryDelay) || Number.isNaN(retryDelay)) {
+    if (!isNumber(retryDelay) || Number.isNaN(retryDelay)) {
       throw new Error(
         `Unable to retry request: invalid retry delay "${retryDelay}"`
       )
@@ -139,9 +152,9 @@ export class Request {
     return this.performAttempt()
   }
 
-  private serializePayload(): any {
+  private serializePayload(): unknown {
     if (
-      ObjectUtils.isPlainObject(this.shape.payload) ||
+      isPlainObject(this.shape.payload) ||
       Array.isArray(this.shape.payload)
     ) {
       this.shape.headers.set('content-type', 'application/json;charset=utf-8')
@@ -152,18 +165,22 @@ export class Request {
     return this.shape.payload
   }
 
-  private readResponseBody(response: Response): Promise<any> {
+  private async readResponseBody(response: Response): Promise<unknown> {
     const contentType = response.headers.get('content-type')
 
     if (contentType?.includes('application/json')) {
       return response.json()
-    } else if (contentType?.includes('text/')) {
-      return response.text()
-    } else if (contentType?.includes('multipart/form-data')) {
-      return response.formData()
-    } else {
-      return response.blob()
     }
+
+    if (contentType?.includes('text/')) {
+      return response.text()
+    }
+
+    if (contentType?.includes('multipart/form-data')) {
+      return response.formData()
+    }
+
+    return response.blob()
   }
 
   private registerAbortionHandler(): void {
@@ -212,7 +229,7 @@ export class Request {
     clearTimeout(this.attemptRejectionTimeoutId)
   }
 
-  private handleAbortion = (): void => {
+  private readonly handleAbortion = (): void => {
     this.attemptAbortController.abort()
   }
 }

@@ -1,7 +1,7 @@
-import { RequestResult } from './request-result'
+import type { RequestResult } from './request-result'
 
 export class FailedRequestError extends Error {
-  private result: RequestResult
+  private readonly result: RequestResult
 
   public constructor(result: RequestResult) {
     super(
@@ -13,7 +13,7 @@ export class FailedRequestError extends Error {
     this.result = result
   }
 
-  public getResult<TData = any>(): RequestResult<TData> {
-    return this.result
+  public getResult<TData = unknown>(): RequestResult<TData> {
+    return this.result as RequestResult<TData>
   }
 }

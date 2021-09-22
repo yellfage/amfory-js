@@ -1,18 +1,26 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import type { ElvyClient } from '../elvy-client'
 
-import { ElvyClient } from '../elvy-client'
-import { EventEmitter } from './event-emitter'
-import { RequestShapeFactory } from './request-shape-factory'
-import { RequestFactory } from './request-factory'
-import { Events } from '../events'
-import { RequestOptions } from '../request-options'
-import { RequestResult } from '../request-result'
-import { RequestSetup } from '../request-setup'
-import { RequestSetupValidator } from './validation'
+import type { Events } from '../events'
+
+import type { RequestOptions } from '../request-options'
+
+import type { RequestResult } from '../request-result'
+
+import type { RequestSetup } from '../request-setup'
+
+import type { EventEmitter } from './event-emitter'
+
+import type { RequestFactory } from './request-factory'
+
+import type { RequestShapeFactory } from './request-shape-factory'
+
+import { validateRequestSetup } from './validation'
 
 export class Client implements ElvyClient {
   private readonly eventEmitter: EventEmitter<Events>
+
   private readonly requestShapeFactory: RequestShapeFactory
+
   private readonly requestFactory: RequestFactory
 
   public constructor(
@@ -39,51 +47,59 @@ export class Client implements ElvyClient {
     this.eventEmitter.off(eventName, handler)
   }
 
-  public get(url: string, options?: RequestOptions): Promise<RequestResult> {
-    return this.request({ url, method: 'GET', ...options })
+  public async get<TResult = unknown>(
+    url: string,
+    options?: RequestOptions
+  ): Promise<RequestResult<TResult>> {
+    return this.request<TResult>({ url, method: 'GET', ...options })
   }
 
-  public head(url: string, options?: RequestOptions): Promise<RequestResult> {
+  public async head(
+    url: string,
+    options?: RequestOptions
+  ): Promise<RequestResult> {
     return this.request({ url, method: 'HEAD', ...options })
   }
 
-  public post(
+  public async post<TPayload = unknown, TResult = unknown>(
     url: string,
-    payload?: any,
+    payload?: TPayload,
     options?: RequestOptions
-  ): Promise<RequestResult> {
-    return this.request({ url, method: 'POST', payload, ...options })
+  ): Promise<RequestResult<TResult>> {
+    return this.request<TResult>({ url, method: 'POST', payload, ...options })
   }
 
-  public put(
+  public async put<TPayload = unknown, TResult = unknown>(
     url: string,
-    payload?: any,
+    payload?: TPayload,
     options?: RequestOptions
-  ): Promise<RequestResult> {
-    return this.request({ url, method: 'PUT', payload, ...options })
+  ): Promise<RequestResult<TResult>> {
+    return this.request<TResult>({ url, method: 'PUT', payload, ...options })
   }
 
-  public delete(
+  public async delete<TPayload = unknown, TResult = unknown>(
     url: string,
-    payload?: any,
+    payload?: TPayload,
     options?: RequestOptions
-  ): Promise<RequestResult> {
-    return this.request({ url, method: 'DELETE', payload, ...options })
+  ): Promise<RequestResult<TResult>> {
+    return this.request<TResult>({ url, method: 'DELETE', payload, ...options })
   }
 
-  public patch(
+  public async patch<TPayload = unknown, TResult = unknown>(
     url: string,
-    payload?: any,
+    payload?: TPayload,
     options?: RequestOptions
-  ): Promise<RequestResult> {
-    return this.request({ url, method: 'PATCH', payload, ...options })
+  ): Promise<RequestResult<TResult>> {
+    return this.request<TResult>({ url, method: 'PATCH', payload, ...options })
   }
 
-  public request(setup: RequestSetup): Promise<RequestResult> {
-    RequestSetupValidator.validate(setup)
+  public async request<TResult>(
+    setup: RequestSetup
+  ): Promise<RequestResult<TResult>> {
+    validateRequestSetup(setup)
 
     const shape = this.requestShapeFactory.create(setup)
 
-    return this.requestFactory.create(shape).perform()
+    return this.requestFactory.create(shape).perform<TResult>()
   }
 }

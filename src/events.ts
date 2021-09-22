@@ -1,9 +1,11 @@
-import { RequestEvent } from './request-event'
-import { RequestResultEvent } from './request-result-event'
-import { RequestRetryEvent } from './request-retry-event'
+import type { RequestEvent } from './request-event'
+
+import type { RequestResultEvent } from './request-result-event'
+
+import type { RequestRetryEvent } from './request-retry-event'
 
 export type Events = {
-  request: (event: RequestEvent) => any
-  result: (event: RequestResultEvent) => any
-  retry: (event: RequestRetryEvent) => any
+  request: (event: RequestEvent) => unknown
+  result: (event: RequestResultEvent) => unknown
+  retry: (event: RequestRetryEvent) => unknown
 }
