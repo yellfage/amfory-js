@@ -20,7 +20,7 @@ export function validateDefaultRequestRetryPolicyOptions({
     (!isNumber(minDelayOffset) || Number.isNaN(minDelayOffset))
   ) {
     throw new TypeError(
-      'Invalid default request retry policy options: the "minDelayOffset" field must be an number'
+      'Invalid default request retry policy options: the "minDelayOffset" field must be a number'
     )
   }
 
@@ -29,7 +29,7 @@ export function validateDefaultRequestRetryPolicyOptions({
     (!isNumber(maxDelayOffset) || Number.isNaN(maxDelayOffset))
   ) {
     throw new TypeError(
-      'Invalid default request retry policy options: the "maxDelayOffset" field must be an number'
+      'Invalid default request retry policy options: the "maxDelayOffset" field must be a number'
     )
   }
 
@@ -38,7 +38,7 @@ export function validateDefaultRequestRetryPolicyOptions({
     (!isNumber(maxRetriesAfterDelays) || Number.isNaN(maxRetriesAfterDelays))
   ) {
     throw new TypeError(
-      'Invalid default request retry policy options: the "maxRetriesAfterDelays" field must be an number'
+      'Invalid default request retry policy options: the "maxRetriesAfterDelays" field must be a number'
     )
   }
 
