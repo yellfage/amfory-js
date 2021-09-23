@@ -2,7 +2,7 @@ import type { ElvyClient } from './elvy-client'
 
 import { ElvyClientFactoryOptions } from './elvy-client-factory-options'
 
-import type { Events } from './events'
+import type { EventHandlerMap } from './event-handler-map'
 
 import {
   EventEmitter,
@@ -33,7 +33,7 @@ export class ElvyClientFactory {
   }
 
   private createCore(options: ElvyClientFactoryOptions): ElvyClient {
-    const eventEmitter = new EventEmitter<Events>()
+    const eventEmitter = new EventEmitter<EventHandlerMap>()
 
     const requestShapeFactory = new RequestShapeFactory(
       options.request.baseUrl,

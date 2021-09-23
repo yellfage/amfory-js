@@ -1,4 +1,4 @@
-import type { Events } from './events'
+import type { EventHandlerMap } from './event-handler-map'
 
 import type { RequestOptions } from './request-options'
 
@@ -7,14 +7,14 @@ import type { RequestResult } from './request-result'
 import type { RequestSetup } from './request-setup'
 
 export interface ElvyClient {
-  on: <TEventName extends keyof Events>(
+  on: <TEventName extends keyof EventHandlerMap>(
     eventName: TEventName,
-    handler: Events[TEventName]
-  ) => Events[TEventName]
+    handler: EventHandlerMap[TEventName]
+  ) => EventHandlerMap[TEventName]
 
-  off: <TEventName extends keyof Events>(
+  off: <TEventName extends keyof EventHandlerMap>(
     eventName: TEventName,
-    handler: Events[TEventName]
+    handler: EventHandlerMap[TEventName]
   ) => void
 
   get: <TResult = unknown>(

@@ -1,6 +1,6 @@
 import type { ElvyClient } from '../elvy-client'
 
-import type { Events } from '../events'
+import type { EventHandlerMap } from '../event-handler-map'
 
 import type { RequestOptions } from '../request-options'
 
@@ -17,14 +17,14 @@ import type { RequestShapeFactory } from './request-shape-factory'
 import { validateRequestSetup } from './validation'
 
 export class Client implements ElvyClient {
-  private readonly eventEmitter: EventEmitter<Events>
+  private readonly eventEmitter: EventEmitter<EventHandlerMap>
 
   private readonly requestShapeFactory: RequestShapeFactory
 
   private readonly requestFactory: RequestFactory
 
   public constructor(
-    eventEmitter: EventEmitter<Events>,
+    eventEmitter: EventEmitter<EventHandlerMap>,
     requestShapeFactory: RequestShapeFactory,
     requestFactory: RequestFactory
   ) {
@@ -33,16 +33,16 @@ export class Client implements ElvyClient {
     this.requestFactory = requestFactory
   }
 
-  public on<TEventName extends keyof Events>(
+  public on<TEventName extends keyof EventHandlerMap>(
     eventName: TEventName,
-    handler: Events[TEventName]
-  ): Events[TEventName] {
+    handler: EventHandlerMap[TEventName]
+  ): EventHandlerMap[TEventName] {
     return this.eventEmitter.on(eventName, handler)
   }
 
-  public off<TEventName extends keyof Events>(
+  public off<TEventName extends keyof EventHandlerMap>(
     eventName: TEventName,
-    handler: Events[TEventName]
+    handler: EventHandlerMap[TEventName]
   ): void {
     this.eventEmitter.off(eventName, handler)
   }

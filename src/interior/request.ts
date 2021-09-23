@@ -1,6 +1,6 @@
 import delay from 'delay'
 
-import type { Events } from '../events'
+import type { EventHandlerMap } from '../event-handler-map'
 
 import { FailedRequestError } from '../failed-request-error'
 
@@ -23,7 +23,7 @@ export class Request {
 
   private readonly logger: Logger
 
-  private readonly eventEmitter: EventEmitter<Events>
+  private readonly eventEmitter: EventEmitter<EventHandlerMap>
 
   private attemptAbortController: AbortController
 
@@ -36,7 +36,7 @@ export class Request {
   public constructor(
     shape: RequestShape,
     logger: Logger,
-    eventEmitter: EventEmitter<Events>
+    eventEmitter: EventEmitter<EventHandlerMap>
   ) {
     this.shape = shape
     this.logger = logger

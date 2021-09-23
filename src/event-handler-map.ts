@@ -4,7 +4,7 @@ import type { RequestResultEvent } from './request-result-event'
 
 import type { RequestRetryEvent } from './request-retry-event'
 
-export type Events = {
+export type EventHandlerMap = {
   request: (event: RequestEvent) => unknown
   result: (event: RequestResultEvent) => unknown
   retry: (event: RequestRetryEvent) => unknown

@@ -1,4 +1,4 @@
-import type { Events } from '../events'
+import type { EventHandlerMap } from '../event-handler-map'
 
 import type { Logger } from '../logging'
 
@@ -11,9 +11,12 @@ import { Request } from './request'
 export class RequestFactory {
   private readonly logger: Logger
 
-  private readonly eventEmitter: EventEmitter<Events>
+  private readonly eventEmitter: EventEmitter<EventHandlerMap>
 
-  public constructor(logger: Logger, eventEmitter: EventEmitter<Events>) {
+  public constructor(
+    logger: Logger,
+    eventEmitter: EventEmitter<EventHandlerMap>
+  ) {
     this.logger = logger
     this.eventEmitter = eventEmitter
   }
