@@ -63,7 +63,10 @@ export class Request {
     try {
       const result = await this.performAttempt<TResult>()
 
-      await this.eventEmitter.emit('result', { shape: this.shape, result })
+      await this.eventEmitter.emit('request-result', {
+        shape: this.shape,
+        result
+      })
 
       if (!this.shape.confirmResolve(result)) {
         throw new FailedRequestError(result)
@@ -132,7 +135,7 @@ export class Request {
       )
     }
 
-    await this.eventEmitter.emit('retry', {
+    await this.eventEmitter.emit('request-retry', {
       shape: this.shape,
       context: { delay: retryDelay, retries: this.retries }
     })

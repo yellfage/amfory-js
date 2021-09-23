@@ -5,8 +5,8 @@ const client = new ElvyClientFactory().create((options) => {
 })
 
 client.on('request', (event) => console.log('Request', event))
-client.on('result', (event) => console.log('Request Result', event))
-client.on('retry', (event) => console.log('Request Retry', event))
+client.on('request-result', (event) => console.log('Request Result', event))
+client.on('request-retry', (event) => console.log('Request Retry', event))
 //
 ;(async () => {
   // You can use a full URL instead of a path
