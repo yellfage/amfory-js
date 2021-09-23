@@ -1,12 +1,12 @@
 import delay from 'delay'
 
+import { AbortError } from '../abort-error'
+
 import type { EventHandlerMap } from '../event-handler-map'
 
 import { FailedRequestError } from '../failed-request-error'
 
 import type { Logger } from '../logging'
-
-import { RequestAbortedError } from '../request-aborted-error'
 
 import type { RequestResult } from '../request-result'
 
@@ -102,7 +102,7 @@ export class Request {
       }
     } catch (error: unknown) {
       if (this.shape.abortController.signal.aborted) {
-        throw new RequestAbortedError()
+        throw new AbortError()
       }
 
       if (!this.shape.retryPolicy.confirm()) {
@@ -146,7 +146,7 @@ export class Request {
         signal: this.shape.abortController.signal
       })
     } catch {
-      throw new RequestAbortedError()
+      throw new AbortError()
     }
 
     return this.performAttempt()
