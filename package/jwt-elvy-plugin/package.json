@@ -1,0 +1,38 @@
+{
+  "name": "@yellfage/jwt-elvy-plugin",
+  "version": "1.0.0",
+  "author": "Yellfage",
+  "description": "JWT Elvy plugin",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "npm-run-all clear:dist compile:prod create:declarations",
+    "compile:prod": "cross-env NODE_ENV=production webpack --config ./webpack.config.js",
+    "create:declarations": "tsc --project ./tsconfig.json --outDir ./dist --emitDeclarationOnly",
+    "clear:dist": "rimraf -rf ./dist/*",
+    "eslint:src": "eslint ./src --ext .js,.ts --ignore-path=../../.eslintignore --report-unused-disable-directives",
+    "eslint:src:fix": "npm run eslint:src -- --fix",
+    "prepublishOnly": "npm-run-all eslint:src:fix build"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yellfage/elvy-js.git",
+    "directory": "package/jwt-elvy-plugin"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "fork-ts-checker-webpack-plugin": "^6.5.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.67.0",
+    "webpack-cli": "^4.9.1"
+  },
+  "peerDependencies": {
+    "@yellfage/elvy": "^1.0.0"
+  }
+}
