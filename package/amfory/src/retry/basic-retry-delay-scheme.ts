@@ -26,7 +26,7 @@ export class BasicRetryDelayScheme implements RetryDelayScheme {
       this.delayIndex += 1
     }
 
-    return this.delays[this.delayIndex] + this.generateDelayOffset()
+    return (this.delays[this.delayIndex] ?? 0) + this.generateDelayOffset()
   }
 
   public reset(): void {
