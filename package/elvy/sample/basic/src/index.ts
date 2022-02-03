@@ -46,7 +46,6 @@ client.on('retry', (event) => console.log('Global retry event handler', event))
 
 //
 ;(async () => {
-  // You can use a full URL instead of a path
   const getReply = await client
     .inquire('GET')
     .setPath('/get')
