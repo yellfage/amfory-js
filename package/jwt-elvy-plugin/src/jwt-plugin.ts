@@ -62,6 +62,6 @@ export class JwtPlugin implements Plugin {
 
     this.resendCount += 1
 
-    event.replaceReply(await this.inquiry.send())
+    return event.resend()
   }
 }
