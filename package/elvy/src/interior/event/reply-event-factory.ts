@@ -6,7 +6,7 @@ import type { Reply } from '../../reply'
 
 export interface ReplyEventFactory {
   create<TReplyData>(
-    inquiry: Inquiry,
+    inquiry: Inquiry<TReplyData>,
     reply: Reply<TReplyData>,
   ): ReplyEvent<TReplyData>
 }

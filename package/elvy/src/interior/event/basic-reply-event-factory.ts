@@ -10,7 +10,7 @@ import type { ReplyEventFactory } from './reply-event-factory'
 
 export class BasicReplyEventFactory implements ReplyEventFactory {
   public create<TReplyData>(
-    inquiry: Inquiry,
+    inquiry: Inquiry<TReplyData>,
     reply: Reply<TReplyData>,
   ): ReplyEvent<TReplyData> {
     return new BasicReplyEvent<TReplyData>(inquiry, reply)

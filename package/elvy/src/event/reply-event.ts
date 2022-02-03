@@ -6,5 +6,5 @@ export interface ReplyEvent<TReplyData = unknown> {
   readonly inquiry: Inquiry
   readonly reply: Reply<TReplyData>
 
-  replaceReply(reply: Reply): void
+  resend(): Promise<void>
 }
