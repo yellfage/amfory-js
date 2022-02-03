@@ -1,8 +1,8 @@
 {
-  "name": "@yellfage/jwt-elvy-plugin",
+  "name": "@yellfage/jwt-amfory-plugin",
   "version": "1.0.0",
   "author": "Yellfage",
-  "description": "JWT Elvy plugin",
+  "description": "JWT Amfory plugin",
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
@@ -19,8 +19,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yellfage/elvy-js.git",
-    "directory": "package/jwt-elvy-plugin"
+    "url": "https://github.com/yellfage/amfory-js.git",
+    "directory": "package/jwt-amfory-plugin"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
@@ -33,6 +33,6 @@
     "webpack-cli": "^4.9.1"
   },
   "peerDependencies": {
-    "@yellfage/elvy": "^1.0.0"
+    "@yellfage/amfory": "^1.0.0"
   }
 }

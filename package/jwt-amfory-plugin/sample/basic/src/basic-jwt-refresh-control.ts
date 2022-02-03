@@ -1,6 +1,6 @@
-import type { Reply } from '@yellfage/elvy'
+import type { Reply } from '@yellfage/amfory'
 
-import { ReplyStatus } from '@yellfage/elvy'
+import { ReplyStatus } from '@yellfage/amfory'
 
 import type { JwtPair, JwtRefreshControl } from '../../../src'
 

@@ -1,4 +1,4 @@
-import type { Reply } from '@yellfage/elvy'
+import type { Reply } from '@yellfage/amfory'
 
 import type { JwtPair } from './jwt-pair'
 

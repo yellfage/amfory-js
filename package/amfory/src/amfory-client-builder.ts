@@ -1,16 +1,15 @@
 import { EventEmitter } from '@yellfage/event-emitter'
 
+import type { AmforyClient } from './amfory-client'
+
 import type {
   LoggingSettingBuilder,
   InquirySettingBuilder,
 } from './configuration'
 
-import type { ElvyClient } from './elvy-client'
-
 import type { EventHandlerMap } from './event-handler-map'
 
 import {
-  BasicElvyClient,
   BasicReplyFactory,
   ReplyBodyArrayBufferReader,
   ReplyBodyBlobReader,
@@ -31,9 +30,10 @@ import {
   BasicInquirySettingBuilder,
   BasicInquiryShapeFactory,
   ArrayBufferInquiryPayloadFactory,
+  BasicAmforyClient,
 } from './interior'
 
-export class ElvyClientBuilder {
+export class AmforyClientBuilder {
   private readonly url: URL
 
   private readonly loggingSettingsBuilder: LoggingSettingBuilder
@@ -72,7 +72,7 @@ export class ElvyClientBuilder {
     return this
   }
 
-  public build(): ElvyClient {
+  public build(): AmforyClient {
     const loggingSettings = this.loggingSettingsBuilder.build()
     const inquirySettings = this.inquirySettingsBuilder.build()
 
@@ -133,15 +133,15 @@ export class ElvyClientBuilder {
       inquiryFactory,
     )
 
-    return new BasicElvyClient(
+    return new BasicAmforyClient(
       pluginBuilders,
       inquiryBuilderFactory,
       eventEmitter,
     )
   }
 
-  public clone(url: string | URL = this.url): ElvyClientBuilder {
-    return new ElvyClientBuilder(
+  public clone(url: string | URL = this.url): AmforyClientBuilder {
+    return new AmforyClientBuilder(
       url,
       this.loggingSettingsBuilder,
       this.inquirySettingsBuilder,

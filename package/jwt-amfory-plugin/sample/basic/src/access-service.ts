@@ -1,6 +1,6 @@
-import type { ElvyClient } from '@yellfage/elvy'
+import type { AmforyClient } from '@yellfage/amfory'
 
-import { ReplyStatus } from '@yellfage/elvy'
+import { ReplyStatus } from '@yellfage/amfory'
 
 import type { Access } from './access'
 
@@ -9,11 +9,11 @@ import type { AccessStore } from './access-store'
 import { FailedAccessRefreshError } from './failed-access-refresh-error'
 
 export class AccessService {
-  private readonly client: ElvyClient
+  private readonly client: AmforyClient
 
   private readonly accessStore: AccessStore
 
-  public constructor(client: ElvyClient, accessStore: AccessStore) {
+  public constructor(client: AmforyClient, accessStore: AccessStore) {
     this.client = client
     this.accessStore = accessStore
   }

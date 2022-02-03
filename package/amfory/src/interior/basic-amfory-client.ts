@@ -1,6 +1,6 @@
 import type { EventEmitter } from '@yellfage/event-emitter'
 
-import type { ElvyClient } from '../elvy-client'
+import type { AmforyClient } from '../amfory-client'
 
 import type { EventHandlerMap } from '../event-handler-map'
 
@@ -10,7 +10,7 @@ import type { PluginBuilder } from '../plugin'
 
 import type { InquiryBuilderFactory } from './inquiry'
 
-export class BasicElvyClient implements ElvyClient {
+export class BasicAmforyClient implements AmforyClient {
   private readonly pluginBuilders: PluginBuilder[]
 
   private readonly inquiryBuilderFactory: InquiryBuilderFactory

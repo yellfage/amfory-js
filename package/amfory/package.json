@@ -1,5 +1,5 @@
 {
-  "name": "@yellfage/elvy",
+  "name": "@yellfage/amfory",
   "version": "1.0.0",
   "author": "Yellfage",
   "description": "HTTP client",
@@ -19,8 +19,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yellfage/elvy-js.git",
-    "directory": "package/elvy"
+    "url": "https://github.com/yellfage/amfory-js.git",
+    "directory": "package/amfory"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

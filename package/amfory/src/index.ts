@@ -14,5 +14,5 @@ export * from './retry'
 
 export * from './abort-error'
 export * from './event-handler-map'
-export * from './elvy-client'
-export * from './elvy-client-builder'
+export * from './amfory-client'
+export * from './amfory-client-builder'

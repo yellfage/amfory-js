@@ -1,11 +1,11 @@
-import type { ElvyClient } from '@yellfage/elvy'
+import type { AmforyClient } from '@yellfage/amfory'
 
 import type { User } from './user'
 
 export class UserService {
-  private readonly client: ElvyClient
+  private readonly client: AmforyClient
 
-  public constructor(client: ElvyClient) {
+  public constructor(client: AmforyClient) {
     this.client = client
   }
 

@@ -6,4 +6,4 @@ export * from './retry'
 
 export * from './random-number'
 export * from './basic-random-number'
-export * from './basic-elvy-client'
+export * from './basic-amfory-client'

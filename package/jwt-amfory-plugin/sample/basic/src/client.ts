@@ -1,4 +1,5 @@
-import { ElvyClientBuilder } from '@yellfage/elvy'
+/* eslint-disable no-console */
+import { AmforyClientBuilder } from '@yellfage/amfory'
 
 import type { JwtPairStash, JwtRefreshControl } from '../../../src'
 
@@ -14,7 +15,7 @@ import { JWT_EXPIRATION_TIME } from './shared'
 
 import { UserService } from './user-service'
 
-const client = new ElvyClientBuilder('http://localhost:3000').build()
+const client = new AmforyClientBuilder('http://localhost:3000').build()
 
 const accessStore = new AccessStore()
 

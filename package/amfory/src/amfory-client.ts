@@ -4,7 +4,7 @@ import type { InquiryBuilder, InquiryMethod } from './inquiry'
 
 import type { PluginBuilder } from './plugin'
 
-export interface ElvyClient {
+export interface AmforyClient {
   use(builder: PluginBuilder): this
 
   on<TEventName extends keyof EventHandlerMap>(

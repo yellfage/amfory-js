@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import {
+  AmforyClientBuilder,
   BasicLoggerBuilder,
   BasicRetryControlBuilder,
   BasicRetryDelaySchemeBuilder,
-  ElvyClientBuilder,
   LogLevel,
   ReplyStatus,
 } from '../../../src'
@@ -12,7 +12,7 @@ import { GlobalPluginBuilder } from './global-plugin-builder'
 
 import { LocalPluginBuilder } from './local-plugin-builder'
 
-const client = new ElvyClientBuilder('https://httpbin.org')
+const client = new AmforyClientBuilder('https://httpbin.org')
   .configureLogging((builder) =>
     builder.setLoggerBuilder(new BasicLoggerBuilder().setLevel(LogLevel.Debug)),
   )

@@ -21,7 +21,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
-    "@yellfage/elvy": "^1.0.0",
+    "@yellfage/amfory": "^1.0.0",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
     "express": "^4.17.2",

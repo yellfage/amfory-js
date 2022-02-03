@@ -1,4 +1,4 @@
-import type { Inquiry, Plugin, PluginBuilder } from '@yellfage/elvy'
+import type { Inquiry, Plugin, PluginBuilder } from '@yellfage/amfory'
 
 import type { JwtPairStash } from './jwt-pair-stash'
 
