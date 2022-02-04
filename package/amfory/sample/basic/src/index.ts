@@ -6,7 +6,7 @@ import {
   BasicRetryDelaySchemeBuilder,
   LogLevel,
   ReplyStatus,
-} from '../../../src'
+} from '@yellfage/amfory'
 
 import { GlobalPluginBuilder } from './global-plugin-builder'
 

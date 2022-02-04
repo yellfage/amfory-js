@@ -10,5 +10,8 @@
     "webpack": "^5.67.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.3"
+  },
+  "dependencies": {
+    "@yellfage/amfory": "^1.0.0"
   }
 }
