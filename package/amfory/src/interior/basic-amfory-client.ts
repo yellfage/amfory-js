@@ -47,31 +47,31 @@ export class BasicAmforyClient implements AmforyClient {
     this.eventEmitter.off(eventName, handler)
   }
 
-  public get(): InquiryBuilder {
-    return this.inquire('GET')
+  public get(path: string): InquiryBuilder {
+    return this.inquire('GET', path)
   }
 
-  public head(): InquiryBuilder {
-    return this.inquire('HEAD')
+  public head(path: string): InquiryBuilder {
+    return this.inquire('HEAD', path)
   }
 
-  public post(): InquiryBuilder {
-    return this.inquire('POST')
+  public post(path: string): InquiryBuilder {
+    return this.inquire('POST', path)
   }
 
-  public put(): InquiryBuilder {
-    return this.inquire('PUT')
+  public put(path: string): InquiryBuilder {
+    return this.inquire('PUT', path)
   }
 
-  public delete(): InquiryBuilder {
-    return this.inquire('DELETE')
+  public delete(path: string): InquiryBuilder {
+    return this.inquire('DELETE', path)
   }
 
-  public patch(): InquiryBuilder {
-    return this.inquire('PATCH')
+  public patch(path: string): InquiryBuilder {
+    return this.inquire('PATCH', path)
   }
 
-  public inquire(method: string): InquiryBuilder {
-    return this.inquiryBuilderFactory.create(method)
+  public inquire(method: string, path: string): InquiryBuilder {
+    return this.inquiryBuilderFactory.create(method, path)
   }
 }

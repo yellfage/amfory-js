@@ -18,7 +18,6 @@ export interface InquiryBuilder {
     handler: EventHandlerMap[TEventName],
   ): this
 
-  setPath(path: string): this
   addParams(params: Record<string, string | number>): this
   addHeaders(headers: Record<string, string | number>): this
   setRejectionDelay(delay: number): this

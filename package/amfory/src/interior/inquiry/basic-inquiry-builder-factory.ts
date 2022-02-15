@@ -115,11 +115,11 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     this.factory = factory
   }
 
-  public create(method: string): InquiryBuilder {
+  public create(method: string, path: string): InquiryBuilder {
     return new BasicInquiryBuilder(
       nanoid(),
       method,
-      new URL(this.baseUrl),
+      new URL(path, this.baseUrl),
       new Headers(this.baseHeaders),
       new EmptyInquiryPayload(),
       this.baseRejectionDelay,

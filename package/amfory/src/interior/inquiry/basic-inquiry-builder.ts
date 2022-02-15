@@ -155,12 +155,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     return this
   }
 
-  public setPath(path: string): this {
-    this.url.pathname = path
-
-    return this
-  }
-
   public addParams(params: Record<string, string | number>): this {
     for (const [name, value] of Object.entries(params)) {
       this.url.searchParams.set(name, value.toString())
