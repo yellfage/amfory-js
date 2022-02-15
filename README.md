@@ -50,4 +50,4 @@ Check out the static [sample](package/amfory/sample/basic/src/index.ts)
 
 ## Plugins
 
-[jwt-amfory-plugin](package/jwt-amfory-plugin) - Transmit and automatically refresh JWT
+[amfory-jwt](package/amfory-jwt) - Transmit and automatically refresh JWT

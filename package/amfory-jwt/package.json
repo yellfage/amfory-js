@@ -1,5 +1,5 @@
 {
-  "name": "@yellfage/jwt-amfory-plugin",
+  "name": "@yellfage/amfory-jwt",
   "version": "1.0.0-beta.1",
   "author": "Yellfage",
   "description": "JWT Amfory plugin",
@@ -20,7 +20,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/yellfage/amfory-js.git",
-    "directory": "package/jwt-amfory-plugin"
+    "directory": "package/amfory-jwt"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
