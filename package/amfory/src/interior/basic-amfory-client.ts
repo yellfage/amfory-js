@@ -47,6 +47,30 @@ export class BasicAmforyClient implements AmforyClient {
     this.eventEmitter.off(eventName, handler)
   }
 
+  public get(): InquiryBuilder {
+    return this.inquire('GET')
+  }
+
+  public head(): InquiryBuilder {
+    return this.inquire('HEAD')
+  }
+
+  public post(): InquiryBuilder {
+    return this.inquire('POST')
+  }
+
+  public put(): InquiryBuilder {
+    return this.inquire('PUT')
+  }
+
+  public delete(): InquiryBuilder {
+    return this.inquire('DELETE')
+  }
+
+  public patch(): InquiryBuilder {
+    return this.inquire('PATCH')
+  }
+
   public inquire(method: string): InquiryBuilder {
     return this.inquiryBuilderFactory.create(method)
   }

@@ -17,5 +17,11 @@ export interface AmforyClient {
     handler: EventHandlerMap[TEventName],
   ): void
 
+  get(): InquiryBuilder
+  head(): InquiryBuilder
+  post(): InquiryBuilder
+  put(): InquiryBuilder
+  delete(): InquiryBuilder
+  patch(): InquiryBuilder
   inquire(method: string): InquiryBuilder
 }
