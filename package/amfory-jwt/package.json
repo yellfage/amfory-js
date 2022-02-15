@@ -1,6 +1,6 @@
 {
   "name": "@yellfage/amfory-jwt",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "author": "Yellfage",
   "description": "JWT Amfory plugin",
   "main": "dist/index.js",
@@ -32,7 +32,7 @@
     "webpack": "^5.67.0",
     "webpack-cli": "^4.9.1"
   },
-  "peerDependencies": {
-    "@yellfage/amfory": "^1.0.0-beta.1"
+  "dependencies": {
+    "@yellfage/amfory": "^1.0.0-beta.2"
   }
 }
