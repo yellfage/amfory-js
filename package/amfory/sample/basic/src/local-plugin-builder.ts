@@ -1,4 +1,4 @@
-import type { Inquiry, Plugin, PluginBuilder } from '../../../src'
+import type { Inquiry, Plugin, PluginBuilder } from '@yellfage/amfory'
 
 import { LocalPlugin } from './local-plugin'
 

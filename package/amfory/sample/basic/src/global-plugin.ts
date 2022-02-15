@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import type { Inquiry, Plugin } from '../../../src'
+import type { Inquiry, Plugin } from '@yellfage/amfory'
 
 export class GlobalPlugin implements Plugin {
   private readonly foo: string

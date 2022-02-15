@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import type { Inquiry, Plugin } from '../../../src'
+import type { Inquiry, Plugin } from '@yellfage/amfory'
 
 export class LocalPlugin implements Plugin {
   private readonly inquiry: Inquiry
