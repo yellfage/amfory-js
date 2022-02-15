@@ -10,10 +10,7 @@ export class UserService {
   }
 
   public async getAll(): Promise<User[]> {
-    const reply = await this.client
-      .inquire('GET')
-      .setPath('/user')
-      .fetchJson<User[]>()
+    const reply = await this.client.get('/user').fetchJson<User[]>()
 
     return reply.data
   }

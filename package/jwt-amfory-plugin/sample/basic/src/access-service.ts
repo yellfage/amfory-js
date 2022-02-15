@@ -19,10 +19,7 @@ export class AccessService {
   }
 
   public async issueAccess(): Promise<void> {
-    const reply = await this.client
-      .inquire('POST')
-      .setPath('/access')
-      .fetchJson<Access>()
+    const reply = await this.client.post('/access').fetchJson<Access>()
 
     this.accessStore.setAccess(reply.data)
   }
@@ -32,8 +29,7 @@ export class AccessService {
    */
   public async refreshAccess(refreshToken: string): Promise<Access> {
     const reply = await this.client
-      .inquire('PUT')
-      .setPath('/access')
+      .put('/access')
       .setJsonPayload({ refreshToken })
       .fetchJson<Access>()
 

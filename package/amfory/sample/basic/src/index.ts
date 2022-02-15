@@ -47,8 +47,7 @@ client.on('retry', (event) => console.log('Global retry event handler', event))
 //
 ;(async () => {
   const getReply = await client
-    .inquire('GET')
-    .setPath('/get')
+    .get('/get')
     .addParams({
       first: 'first-value',
       second: 'second-value',
@@ -59,9 +58,8 @@ client.on('retry', (event) => console.log('Global retry event handler', event))
   console.log(getReply)
 
   const postReply = await client
-    .inquire('POST')
+    .post('/post')
     .use(new LocalPluginBuilder())
-    .setPath('/post')
     .addHeaders({ 'x-custom-local-header': 'value' })
     .on('inquiry', (event) => console.log('Local inquiry event handler', event))
     .on('reply', (event) => console.log('Local reply event handler', event))
