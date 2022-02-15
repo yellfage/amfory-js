@@ -1,6 +1,6 @@
 {
   "name": "@yellfage/jwt-amfory-plugin",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "author": "Yellfage",
   "description": "JWT Amfory plugin",
   "main": "dist/index.js",
