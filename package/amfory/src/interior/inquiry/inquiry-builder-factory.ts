@@ -1,5 +1,5 @@
-import type { InquiryBuilder, InquiryMethod } from '../../inquiry'
+import type { InquiryBuilder } from '../../inquiry'
 
 export interface InquiryBuilderFactory {
-  create(method: InquiryMethod): InquiryBuilder
+  create(method: string): InquiryBuilder
 }

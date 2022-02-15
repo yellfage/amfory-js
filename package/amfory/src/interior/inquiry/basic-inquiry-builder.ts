@@ -6,7 +6,6 @@ import type {
   InquiryBuilder,
   InquiryItems,
   InquiryPayload,
-  InquiryMethod,
 } from '../../inquiry'
 
 import type { PluginBuilder } from '../../plugin'
@@ -38,7 +37,7 @@ import type { TextInquiryPayloadFactory } from './text-inquiry-payload-factory'
 export class BasicInquiryBuilder implements InquiryBuilder {
   private readonly id: string
 
-  private readonly method: InquiryMethod
+  private readonly method: string
 
   private readonly url: URL
 
@@ -84,7 +83,7 @@ export class BasicInquiryBuilder implements InquiryBuilder {
 
   public constructor(
     id: string,
-    method: InquiryMethod,
+    method: string,
     url: URL,
     headers: Headers,
     payload: InquiryPayload,

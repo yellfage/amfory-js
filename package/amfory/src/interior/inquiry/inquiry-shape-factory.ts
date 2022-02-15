@@ -1,12 +1,8 @@
-import type {
-  InquiryMethod,
-  InquirySerializedPayload,
-  InquiryShape,
-} from '../../inquiry'
+import type { InquirySerializedPayload, InquiryShape } from '../../inquiry'
 
 export interface InquiryShapeFactory {
   create(
-    method: InquiryMethod,
+    method: string,
     url: URL,
     headers: Headers,
     payload: InquirySerializedPayload,

@@ -1,4 +1,3 @@
-export * from './inquiry-method'
 export * from './inquiry-payload'
 export * from './inquiry-serialized-payload'
 export * from './inquiry-shape'

@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid'
 
 import type { EventHandlerMap } from '../../event-handler-map'
 
-import type { InquiryBuilder, InquiryMethod } from '../../inquiry'
+import type { InquiryBuilder } from '../../inquiry'
 
 import type { PluginBuilder } from '../../plugin'
 
@@ -115,7 +115,7 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     this.factory = factory
   }
 
-  public create(method: InquiryMethod): InquiryBuilder {
+  public create(method: string): InquiryBuilder {
     return new BasicInquiryBuilder(
       nanoid(),
       method,

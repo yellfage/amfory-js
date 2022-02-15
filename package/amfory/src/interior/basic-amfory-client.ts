@@ -4,7 +4,7 @@ import type { AmforyClient } from '../amfory-client'
 
 import type { EventHandlerMap } from '../event-handler-map'
 
-import type { InquiryBuilder, InquiryMethod } from '../inquiry'
+import type { InquiryBuilder } from '../inquiry'
 
 import type { PluginBuilder } from '../plugin'
 
@@ -47,7 +47,7 @@ export class BasicAmforyClient implements AmforyClient {
     this.eventEmitter.off(eventName, handler)
   }
 
-  public inquire(method: InquiryMethod): InquiryBuilder {
+  public inquire(method: string): InquiryBuilder {
     return this.inquiryBuilderFactory.create(method)
   }
 }

@@ -1,11 +1,7 @@
-import type {
-  InquiryMethod,
-  InquirySerializedPayload,
-  InquiryShape,
-} from '../../inquiry'
+import type { InquirySerializedPayload, InquiryShape } from '../../inquiry'
 
 export class BasicInquiryShape implements InquiryShape {
-  public readonly method: InquiryMethod
+  public readonly method: string
 
   public readonly url: URL
 
@@ -20,7 +16,7 @@ export class BasicInquiryShape implements InquiryShape {
   public readonly abortController: AbortController
 
   public constructor(
-    method: InquiryMethod,
+    method: string,
     url: URL,
     headers: Headers,
     payload: InquirySerializedPayload,

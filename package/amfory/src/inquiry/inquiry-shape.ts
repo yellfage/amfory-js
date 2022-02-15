@@ -1,9 +1,7 @@
-import type { InquiryMethod } from './inquiry-method'
-
 import type { InquirySerializedPayload } from './inquiry-serialized-payload'
 
 export interface InquiryShape {
-  readonly method: InquiryMethod
+  readonly method: string
   readonly url: URL
   readonly headers: Headers
   readonly payload: InquirySerializedPayload

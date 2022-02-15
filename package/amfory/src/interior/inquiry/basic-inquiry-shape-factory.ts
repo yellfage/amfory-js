@@ -1,8 +1,4 @@
-import type {
-  InquiryMethod,
-  InquirySerializedPayload,
-  InquiryShape,
-} from '../../inquiry'
+import type { InquirySerializedPayload, InquiryShape } from '../../inquiry'
 
 import { BasicInquiryShape } from './basic-inquiry-shape'
 
@@ -10,7 +6,7 @@ import type { InquiryShapeFactory } from './inquiry-shape-factory'
 
 export class BasicInquiryShapeFactory implements InquiryShapeFactory {
   public create(
-    method: InquiryMethod,
+    method: string,
     url: URL,
     headers: Headers,
     payload: InquirySerializedPayload,
