@@ -7,7 +7,6 @@ import type { InquiryItems } from './inquiry-items'
 import type { InquiryShape } from './inquiry-shape'
 
 export interface Inquiry<TResult = unknown> {
-  readonly id: string
   readonly shape: InquiryShape
   readonly items: InquiryItems
 

@@ -62,14 +62,12 @@ export class BasicInquiryFactory implements InquiryFactory {
   }
 
   public create<TResult>(
-    id: string,
     shape: InquiryShape,
     items: InquiryItems,
     eventEmitter: EventEmitter<EventHandlerMap>,
     replyBodyReader: ReplyBodyReader<TResult>,
   ): Inquiry<TResult> {
     return new BasicInquiry(
-      id,
       shape,
       items,
       eventEmitter,

@@ -8,7 +8,6 @@ import type { ReplyBodyReader } from '../../reply'
 
 export interface InquiryFactory {
   create<TResult>(
-    id: string,
     shape: InquiryShape,
     items: InquiryItems,
     eventEmitter: EventEmitter<EventHandlerMap>,

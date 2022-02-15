@@ -27,8 +27,6 @@ import type { RetryContextFactory } from '../retry'
 import { InquiryState } from './inquiry-state'
 
 export class BasicInquiry<TResult> implements Inquiry<TResult> {
-  public readonly id: string
-
   public readonly shape: InquiryShape
 
   public readonly items: InquiryItems
@@ -62,7 +60,6 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
   private attemptRejectionTimeoutId = 0
 
   public constructor(
-    id: string,
     shape: InquiryShape,
     items: InquiryItems,
     eventEmitter: EventEmitter<EventHandlerMap>,
@@ -76,7 +73,6 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
     replyEventFactory: ReplyEventFactory,
     logger: Logger,
   ) {
-    this.id = id
     this.shape = shape
     this.items = items
     this.eventEmitter = eventEmitter

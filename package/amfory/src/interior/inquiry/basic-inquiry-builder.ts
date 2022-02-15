@@ -35,8 +35,6 @@ import type { JsonInquiryPayloadFactory } from './json-inquiry-payload-factory'
 import type { TextInquiryPayloadFactory } from './text-inquiry-payload-factory'
 
 export class BasicInquiryBuilder implements InquiryBuilder {
-  private readonly id: string
-
   private readonly method: string
 
   private readonly url: URL
@@ -82,7 +80,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
   private readonly factory: InquiryFactory
 
   public constructor(
-    id: string,
     method: string,
     url: URL,
     headers: Headers,
@@ -106,7 +103,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     shapeFactory: InquiryShapeFactory,
     factory: InquiryFactory,
   ) {
-    this.id = id
     this.method = method
     this.url = url
     this.headers = headers
@@ -249,7 +245,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     )
 
     const inquiry = this.factory.create(
-      this.id,
       shape,
       this.items,
       this.eventEmitter,

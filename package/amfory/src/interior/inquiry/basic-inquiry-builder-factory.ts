@@ -1,7 +1,5 @@
 import type { EventEmitter } from '@yellfage/event-emitter'
 
-import { nanoid } from 'nanoid'
-
 import type { EventHandlerMap } from '../../event-handler-map'
 
 import type { InquiryBuilder } from '../../inquiry'
@@ -117,7 +115,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
 
   public create(method: string, path: string): InquiryBuilder {
     return new BasicInquiryBuilder(
-      nanoid(),
       method,
       new URL(path, this.baseUrl),
       new Headers(this.baseHeaders),
