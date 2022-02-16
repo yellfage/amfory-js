@@ -159,7 +159,7 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     return this
   }
 
-  public addHeaders(headers: Record<string, string | number>): this {
+  public putHeaders(headers: Record<string, string | number>): this {
     for (const [name, value] of Object.entries(headers)) {
       this.headers.set(name, value.toString())
     }

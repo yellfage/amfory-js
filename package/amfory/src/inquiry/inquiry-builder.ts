@@ -19,7 +19,7 @@ export interface InquiryBuilder {
   ): this
 
   addParams(params: Record<string, string | number>): this
-  addHeaders(headers: Record<string, string | number>): this
+  putHeaders(headers: Record<string, string | number>): this
   setRejectionDelay(delay: number): this
   setAttemptRejectionDelay(delay: number): this
   setAbortController(controller: AbortController): this
