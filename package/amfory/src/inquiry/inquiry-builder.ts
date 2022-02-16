@@ -4,6 +4,8 @@ import type { PluginBuilder } from '../plugin'
 
 import type { Reply, ReplyBodyReader } from '../reply'
 
+import type { URLSearchParamsInit } from '../url-search-params-init'
+
 import type { InquiryPayload } from './inquiry-payload'
 
 export interface InquiryBuilder {
@@ -17,8 +19,7 @@ export interface InquiryBuilder {
     eventName: TEventName,
     handler: EventHandlerMap[TEventName],
   ): this
-
-  addParams(params: Record<string, string | number>): this
+  putParams(init: URLSearchParamsInit): this
   putHeaders(headers: Record<string, string | number>): this
   setRejectionDelay(delay: number): this
   setAttemptRejectionDelay(delay: number): this

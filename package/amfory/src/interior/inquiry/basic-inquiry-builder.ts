@@ -12,6 +12,8 @@ import type { PluginBuilder } from '../../plugin'
 
 import type { Reply, ReplyBodyReader } from '../../reply'
 
+import type { URLSearchParamsInit } from '../../url-search-params-init'
+
 import type {
   ReplyBodyArrayBufferReader,
   ReplyBodyBlobReader,
@@ -151,10 +153,10 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     return this
   }
 
-  public addParams(params: Record<string, string | number>): this {
-    for (const [name, value] of Object.entries(params)) {
-      this.url.searchParams.set(name, value.toString())
-    }
+  public putParams(init: URLSearchParamsInit): this {
+    new URLSearchParams(init).forEach((value, name) =>
+      this.url.searchParams.set(name, value),
+    )
 
     return this
   }
