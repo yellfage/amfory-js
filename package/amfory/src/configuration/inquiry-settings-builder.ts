@@ -3,7 +3,7 @@ import type { RetryControlBuilder, RetryDelaySchemeBuilder } from '../retry'
 import type { InquirySettings } from './inquiry-settings'
 
 export interface InquirySettingBuilder {
-  setHeaders(init: HeadersInit): this
+  putHeaders(init: HeadersInit): this
   setRejectionDelay(delay: number): this
   setAttemptRejectionDelay(delay: number): this
   setRetryControlBuilder(builder: RetryControlBuilder): this

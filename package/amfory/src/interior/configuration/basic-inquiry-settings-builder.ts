@@ -11,7 +11,7 @@ import {
 } from '../../retry'
 
 export class BasicInquirySettingBuilder implements InquirySettingBuilder {
-  private headers: Headers
+  private readonly headers: Headers
 
   private rejectionDelay: number
 
@@ -43,8 +43,8 @@ export class BasicInquirySettingBuilder implements InquirySettingBuilder {
     this.retryDelaySchemeBuilder = retryDelaySchemeBuilder
   }
 
-  public setHeaders(init: HeadersInit): this {
-    this.headers = new Headers(init)
+  public putHeaders(init: HeadersInit): this {
+    new Headers(init).forEach((value, key) => this.headers.set(key, value))
 
     return this
   }
