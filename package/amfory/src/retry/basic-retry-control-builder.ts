@@ -33,6 +33,12 @@ export class BasicRetryControlBuilder implements RetryControlBuilder {
     return this
   }
 
+  public addRetryableStatuses(statuses: ReplyStatus[]): this {
+    this.retryableStatuses.push(...statuses)
+
+    return this
+  }
+
   public build(): RetryControl {
     return new BasicRetryControl(this.retryableStatuses)
   }
