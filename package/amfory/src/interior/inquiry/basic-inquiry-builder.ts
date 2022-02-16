@@ -161,6 +161,14 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     return this
   }
 
+  public joinParams(init: URLSearchParamsInit): this {
+    new URLSearchParams(init).forEach((value, name) =>
+      this.url.searchParams.append(name, value),
+    )
+
+    return this
+  }
+
   public putHeaders(headers: Record<string, string | number>): this {
     for (const [name, value] of Object.entries(headers)) {
       this.headers.set(name, value.toString())

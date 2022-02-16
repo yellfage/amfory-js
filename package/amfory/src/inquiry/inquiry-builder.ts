@@ -20,6 +20,7 @@ export interface InquiryBuilder {
     handler: EventHandlerMap[TEventName],
   ): this
   putParams(init: URLSearchParamsInit): this
+  joinParams(init: URLSearchParamsInit): this
   putHeaders(headers: Record<string, string | number>): this
   setRejectionDelay(delay: number): this
   setAttemptRejectionDelay(delay: number): this
