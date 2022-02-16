@@ -175,6 +175,12 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     return this
   }
 
+  public joinHeaders(init: HeadersInit): this {
+    new Headers(init).forEach((value, name) => this.headers.append(name, value))
+
+    return this
+  }
+
   public setRejectionDelay(delay: number): this {
     this.rejectionDelay = delay
 
