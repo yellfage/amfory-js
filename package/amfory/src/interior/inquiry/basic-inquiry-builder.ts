@@ -169,10 +169,8 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     return this
   }
 
-  public putHeaders(headers: Record<string, string | number>): this {
-    for (const [name, value] of Object.entries(headers)) {
-      this.headers.set(name, value.toString())
-    }
+  public putHeaders(init: HeadersInit): this {
+    new Headers(init).forEach((value, name) => this.headers.set(name, value))
 
     return this
   }

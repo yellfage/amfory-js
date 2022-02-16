@@ -21,7 +21,7 @@ export interface InquiryBuilder {
   ): this
   putParams(init: URLSearchParamsInit): this
   joinParams(init: URLSearchParamsInit): this
-  putHeaders(headers: Record<string, string | number>): this
+  putHeaders(init: HeadersInit): this
   setRejectionDelay(delay: number): this
   setAttemptRejectionDelay(delay: number): this
   setAbortController(controller: AbortController): this
