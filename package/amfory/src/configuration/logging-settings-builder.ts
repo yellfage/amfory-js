@@ -2,8 +2,8 @@ import type { LoggerBuilder } from '../logging'
 
 import type { LoggingSettings } from './logging-settings'
 
-export interface LoggingSettingBuilder {
+export interface LoggingSettingsBuilder {
   setLoggerBuilder(builder: LoggerBuilder): this
   build(): LoggingSettings
-  clone(): LoggingSettingBuilder
+  clone(): LoggingSettingsBuilder
 }

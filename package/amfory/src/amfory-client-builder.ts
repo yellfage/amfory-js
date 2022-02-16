@@ -3,8 +3,8 @@ import { EventEmitter } from '@yellfage/event-emitter'
 import type { AmforyClient } from './amfory-client'
 
 import type {
-  LoggingSettingBuilder,
-  InquirySettingBuilder,
+  LoggingSettingsBuilder,
+  InquirySettingsBuilder,
 } from './configuration'
 
 import type { EventHandlerMap } from './event-handler-map'
@@ -26,8 +26,8 @@ import {
   BasicRetryEventFactory,
   BasicReplyEventFactory,
   BasicRetryContextFactory,
-  BasicLoggingSettingBuilder,
-  BasicInquirySettingBuilder,
+  BasicLoggingSettingsBuilder,
+  BasicInquirySettingsBuilder,
   BasicInquiryShapeFactory,
   ArrayBufferInquiryPayloadFactory,
   BasicAmforyClient,
@@ -36,20 +36,20 @@ import {
 export class AmforyClientBuilder {
   private readonly url: URL
 
-  private readonly loggingSettingsBuilder: LoggingSettingBuilder
+  private readonly loggingSettingsBuilder: LoggingSettingsBuilder
 
-  private readonly inquirySettingsBuilder: InquirySettingBuilder
+  private readonly inquirySettingsBuilder: InquirySettingsBuilder
 
   public constructor(url: string | URL)
   public constructor(
     url: string | URL,
-    loggingSettingsBuilder: LoggingSettingBuilder,
-    inquirySettingsBuilder: InquirySettingBuilder,
+    loggingSettingsBuilder: LoggingSettingsBuilder,
+    inquirySettingsBuilder: InquirySettingsBuilder,
   )
   public constructor(
     url: string | URL,
-    loggingSettingsBuilder: LoggingSettingBuilder = new BasicLoggingSettingBuilder(),
-    inquirySettingsBuilder: InquirySettingBuilder = new BasicInquirySettingBuilder(),
+    loggingSettingsBuilder: LoggingSettingsBuilder = new BasicLoggingSettingsBuilder(),
+    inquirySettingsBuilder: InquirySettingsBuilder = new BasicInquirySettingsBuilder(),
   ) {
     this.url = new URL(url)
     this.loggingSettingsBuilder = loggingSettingsBuilder
@@ -57,7 +57,7 @@ export class AmforyClientBuilder {
   }
 
   public configureLogging(
-    configure: (builder: LoggingSettingBuilder) => void,
+    configure: (builder: LoggingSettingsBuilder) => void,
   ): this {
     configure(this.loggingSettingsBuilder)
 
@@ -65,7 +65,7 @@ export class AmforyClientBuilder {
   }
 
   public configureInquiry(
-    configure: (builder: InquirySettingBuilder) => void,
+    configure: (builder: InquirySettingsBuilder) => void,
   ): this {
     configure(this.inquirySettingsBuilder)
 

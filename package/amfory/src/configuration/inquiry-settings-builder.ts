@@ -2,7 +2,7 @@ import type { RetryControlBuilder, RetryDelaySchemeBuilder } from '../retry'
 
 import type { InquirySettings } from './inquiry-settings'
 
-export interface InquirySettingBuilder {
+export interface InquirySettingsBuilder {
   putHeaders(init: HeadersInit): this
   joinHeaders(init: HeadersInit): this
   setRejectionDelay(delay: number): this
@@ -10,5 +10,5 @@ export interface InquirySettingBuilder {
   setRetryControlBuilder(builder: RetryControlBuilder): this
   setRetryDelaySchemeBuilder(builder: RetryDelaySchemeBuilder): this
   build(): InquirySettings
-  clone(): InquirySettingBuilder
+  clone(): InquirySettingsBuilder
 }

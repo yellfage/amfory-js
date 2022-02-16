@@ -1,5 +1,5 @@
 import type {
-  InquirySettingBuilder,
+  InquirySettingsBuilder,
   InquirySettings,
 } from '../../configuration'
 
@@ -12,7 +12,7 @@ import {
 
 import { BasicInquirySettings } from './basic-inquiry-settings'
 
-export class BasicInquirySettingBuilder implements InquirySettingBuilder {
+export class BasicInquirySettingsBuilder implements InquirySettingsBuilder {
   private readonly headers: Headers
 
   private rejectionDelay: number
@@ -91,8 +91,8 @@ export class BasicInquirySettingBuilder implements InquirySettingBuilder {
     )
   }
 
-  public clone(): InquirySettingBuilder {
-    return new BasicInquirySettingBuilder(
+  public clone(): InquirySettingsBuilder {
+    return new BasicInquirySettingsBuilder(
       new Headers(this.headers),
       this.rejectionDelay,
       this.attemptRejectionDelay,
