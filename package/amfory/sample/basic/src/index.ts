@@ -18,7 +18,7 @@ const client = new AmforyClientBuilder('https://httpbin.org')
   )
   .configureInquiry((builder) =>
     builder
-      .setHeaders({ 'x-custom-global-header': 'value' })
+      .putHeaders({ 'x-custom-global-header': 'value' })
       .setRejectionDelay(90000)
       .setAttemptRejectionDelay(15000)
       .setRetryControlBuilder(
@@ -48,7 +48,7 @@ client.on('retry', (event) => console.log('Global retry event handler', event))
 ;(async () => {
   const getReply = await client
     .get('/get')
-    .addParams({
+    .putParams({
       first: 'first-value',
       second: 'second-value',
       third: 'third-value',
@@ -60,7 +60,7 @@ client.on('retry', (event) => console.log('Global retry event handler', event))
   const postReply = await client
     .post('/post')
     .use(new LocalPluginBuilder())
-    .addHeaders({ 'x-custom-local-header': 'value' })
+    .putHeaders({ 'x-custom-local-header': 'value' })
     .on('inquiry', (event) => console.log('Local inquiry event handler', event))
     .on('reply', (event) => console.log('Local reply event handler', event))
     .on('retry', (event) => console.log('Local retry event handler', event))
