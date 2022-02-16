@@ -49,6 +49,12 @@ export class BasicInquirySettingBuilder implements InquirySettingBuilder {
     return this
   }
 
+  public joinHeaders(init: HeadersInit): this {
+    new Headers(init).forEach((value, key) => this.headers.append(key, value))
+
+    return this
+  }
+
   public setRejectionDelay(delay: number): this {
     this.rejectionDelay = delay
 
