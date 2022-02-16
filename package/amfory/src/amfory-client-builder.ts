@@ -143,8 +143,8 @@ export class AmforyClientBuilder {
   public clone(url: string | URL = this.url): AmforyClientBuilder {
     return new AmforyClientBuilder(
       url,
-      this.loggingSettingsBuilder,
-      this.inquirySettingsBuilder,
+      this.loggingSettingsBuilder.clone(),
+      this.inquirySettingsBuilder.clone(),
     )
   }
 }

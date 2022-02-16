@@ -11,17 +11,37 @@ import {
 } from '../../retry'
 
 export class BasicInquirySettingBuilder implements InquirySettingBuilder {
-  private headers: Headers = new Headers()
+  private headers: Headers
 
-  private rejectionDelay = 90000
+  private rejectionDelay: number
 
-  private attemptRejectionDelay = 15000
+  private attemptRejectionDelay: number
 
-  private retryControlBuilder: RetryControlBuilder =
-    new BasicRetryControlBuilder()
+  private retryControlBuilder: RetryControlBuilder
 
-  private retryDelaySchemeBuilder: RetryDelaySchemeBuilder =
-    new BasicRetryDelaySchemeBuilder()
+  private retryDelaySchemeBuilder: RetryDelaySchemeBuilder
+
+  public constructor()
+  public constructor(
+    headers: Headers,
+    rejectionDelay: number,
+    attemptRejectionDelay: number,
+    retryControlBuilder: RetryControlBuilder,
+    retryDelaySchemeBuilder: RetryDelaySchemeBuilder,
+  )
+  public constructor(
+    headers = new Headers(),
+    rejectionDelay = 90000,
+    attemptRejectionDelay = 15000,
+    retryControlBuilder: RetryControlBuilder = new BasicRetryControlBuilder(),
+    retryDelaySchemeBuilder: RetryDelaySchemeBuilder = new BasicRetryDelaySchemeBuilder(),
+  ) {
+    this.headers = headers
+    this.rejectionDelay = rejectionDelay
+    this.attemptRejectionDelay = attemptRejectionDelay
+    this.retryControlBuilder = retryControlBuilder
+    this.retryDelaySchemeBuilder = retryDelaySchemeBuilder
+  }
 
   public setHeaders(init: HeadersInit): this {
     this.headers = new Headers(init)
@@ -61,5 +81,15 @@ export class BasicInquirySettingBuilder implements InquirySettingBuilder {
       retryControl: this.retryControlBuilder.build(),
       retryDelayScheme: this.retryDelaySchemeBuilder.build(),
     }
+  }
+
+  public clone(): InquirySettingBuilder {
+    return new BasicInquirySettingBuilder(
+      new Headers(this.headers),
+      this.rejectionDelay,
+      this.attemptRejectionDelay,
+      this.retryControlBuilder.clone(),
+      this.retryDelaySchemeBuilder.clone(),
+    )
   }
 }

@@ -5,7 +5,11 @@ import { LogLevel } from './log-level'
 import type { LoggerBuilder } from './logger-builder'
 
 export class BasicLoggerBuilder implements LoggerBuilder {
-  private level = LogLevel.Trace
+  private level: LogLevel
+
+  public constructor(level = LogLevel.Trace) {
+    this.level = level
+  }
 
   public setLevel(level: LogLevel): this {
     this.level = level
@@ -15,5 +19,9 @@ export class BasicLoggerBuilder implements LoggerBuilder {
 
   public build(): BasicLogger {
     return new BasicLogger(this.level)
+  }
+
+  public clone(): LoggerBuilder {
+    return new BasicLoggerBuilder(this.level)
   }
 }

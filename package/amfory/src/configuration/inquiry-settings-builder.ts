@@ -9,4 +9,5 @@ export interface InquirySettingBuilder {
   setRetryControlBuilder(builder: RetryControlBuilder): this
   setRetryDelaySchemeBuilder(builder: RetryDelaySchemeBuilder): this
   build(): InquirySettings
+  clone(): InquirySettingBuilder
 }
