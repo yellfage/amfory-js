@@ -10,6 +10,8 @@ import {
   BasicRetryDelaySchemeBuilder,
 } from '../../retry'
 
+import { BasicInquirySettings } from './basic-inquiry-settings'
+
 export class BasicInquirySettingBuilder implements InquirySettingBuilder {
   private readonly headers: Headers
 
@@ -80,13 +82,13 @@ export class BasicInquirySettingBuilder implements InquirySettingBuilder {
   }
 
   public build(): InquirySettings {
-    return {
-      headers: this.headers,
-      rejectionDelay: this.rejectionDelay,
-      attemptRejectionDelay: this.attemptRejectionDelay,
-      retryControl: this.retryControlBuilder.build(),
-      retryDelayScheme: this.retryDelaySchemeBuilder.build(),
-    }
+    return new BasicInquirySettings(
+      this.headers,
+      this.rejectionDelay,
+      this.attemptRejectionDelay,
+      this.retryControlBuilder.build(),
+      this.retryDelaySchemeBuilder.build(),
+    )
   }
 
   public clone(): InquirySettingBuilder {

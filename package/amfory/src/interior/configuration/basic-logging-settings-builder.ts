@@ -7,6 +7,8 @@ import type { LoggerBuilder } from '../../logging'
 
 import { BasicLoggerBuilder } from '../../logging'
 
+import { BasicLoggingSettings } from './basic-logging-settings'
+
 export class BasicLoggingSettingBuilder implements LoggingSettingBuilder {
   private loggerBuilder: LoggerBuilder
 
@@ -21,7 +23,7 @@ export class BasicLoggingSettingBuilder implements LoggingSettingBuilder {
   }
 
   public build(): LoggingSettings {
-    return { logger: this.loggerBuilder.build() }
+    return new BasicLoggingSettings(this.loggerBuilder.build())
   }
 
   public clone(): LoggingSettingBuilder {
