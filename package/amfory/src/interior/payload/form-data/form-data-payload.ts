@@ -1,6 +1,6 @@
-import type { InquiryPayload } from '../../../../inquiry'
+import type { Payload } from '../../../payload'
 
-export class FormDataInquiryPayload implements InquiryPayload {
+export class FormDataPayload implements Payload {
   private readonly value: FormData
 
   public constructor(value: FormData) {

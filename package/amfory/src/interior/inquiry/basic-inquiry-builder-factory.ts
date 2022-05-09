@@ -7,6 +7,16 @@ import type {
 } from '../event'
 
 import type {
+  ArrayBufferPayloadFactory,
+  BlobPayloadFactory,
+  FormDataPayloadFactory,
+  JsonPayloadFactory,
+  TextPayloadFactory,
+} from '../payload'
+
+import { EmptyPayload } from '../payload'
+
+import type {
   ReplyBodyArrayBufferReader,
   ReplyBodyBlobReader,
   ReplyBodyFormDataReader,
@@ -22,16 +32,6 @@ import type { InquiryBuilderFactory } from './inquiry-builder-factory'
 
 import type { InquiryFactory } from './inquiry-factory'
 
-import type {
-  ArrayBufferInquiryPayloadFactory,
-  BlobInquiryPayloadFactory,
-  FormDataInquiryPayloadFactory,
-  JsonInquiryPayloadFactory,
-  TextInquiryPayloadFactory,
-} from './payload'
-
-import { EmptyInquiryPayload } from './payload'
-
 export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
   private readonly baseUrl: URL
 
@@ -45,15 +45,15 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
 
   private readonly baseRetryingEventChannel: RetryingEventChannel
 
-  private readonly arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory
+  private readonly arrayBufferPayloadFactory: ArrayBufferPayloadFactory
 
-  private readonly blobPayloadFactory: BlobInquiryPayloadFactory
+  private readonly blobPayloadFactory: BlobPayloadFactory
 
-  private readonly formDataPayloadFactory: FormDataInquiryPayloadFactory
+  private readonly formDataPayloadFactory: FormDataPayloadFactory
 
-  private readonly jsonPayloadFactory: JsonInquiryPayloadFactory
+  private readonly jsonPayloadFactory: JsonPayloadFactory
 
-  private readonly textPayloadFactory: TextInquiryPayloadFactory
+  private readonly textPayloadFactory: TextPayloadFactory
 
   private readonly replyBodyArrayBufferReader: ReplyBodyArrayBufferReader
 
@@ -74,11 +74,11 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     baseInquiringEventChannel: InquiringEventChannel,
     baseReplyingEventChannel: ReplyingEventChannel,
     baseRetryingEventChannel: RetryingEventChannel,
-    arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory,
-    blobPayloadFactory: BlobInquiryPayloadFactory,
-    formDataPayloadFactory: FormDataInquiryPayloadFactory,
-    jsonPayloadFactory: JsonInquiryPayloadFactory,
-    textPayloadFactory: TextInquiryPayloadFactory,
+    arrayBufferPayloadFactory: ArrayBufferPayloadFactory,
+    blobPayloadFactory: BlobPayloadFactory,
+    formDataPayloadFactory: FormDataPayloadFactory,
+    jsonPayloadFactory: JsonPayloadFactory,
+    textPayloadFactory: TextPayloadFactory,
     replyBodyArrayBufferReader: ReplyBodyArrayBufferReader,
     replyBodyBlobReader: ReplyBodyBlobReader,
     replyBodyFormDataReader: ReplyBodyFormDataReader,
@@ -110,7 +110,7 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
       method,
       new URL(path, this.baseUrl),
       new Headers(),
-      new EmptyInquiryPayload(),
+      new EmptyPayload(),
       this.baseRejectionDelay,
       this.baseAttemptRejectionDelay,
       new AbortController(),

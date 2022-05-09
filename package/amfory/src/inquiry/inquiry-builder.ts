@@ -1,10 +1,10 @@
+import type { Payload } from '../payload'
+
 import type { InquiryPluginBuilder } from '../plugin'
 
 import type { Reply, ReplyBodyReader } from '../reply'
 
 import type { URLSearchParamsInit } from '../url-search-params-init'
-
-import type { InquiryPayload } from './payload'
 
 export interface InquiryBuilder {
   use(builder: InquiryPluginBuilder): this
@@ -22,7 +22,7 @@ export interface InquiryBuilder {
   setFormDataPayload(value: FormData): this
   setJsonPayload<TValue = unknown>(value: TValue): this
   setTextPayload(value: string | number, charset?: string): this
-  setPayload(payload: InquiryPayload): this
+  setPayload(payload: Payload): this
 
   fetchArrayBuffer(): Promise<Reply<ArrayBuffer>>
   fetchBlob(): Promise<Reply<Blob>>

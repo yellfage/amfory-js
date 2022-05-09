@@ -2,13 +2,11 @@ import delay from 'delay'
 
 import { AbortError } from '../../abort-error'
 
-import type {
-  Inquiry,
-  InquiryItems,
-  InquirySerializedPayload,
-} from '../../inquiry'
+import type { Inquiry, InquiryItems } from '../../inquiry'
 
 import type { Logger } from '../../logging'
+
+import type { SerializedPayload } from '../../payload'
 
 import type { Reply, ReplyBodyReader } from '../../reply'
 
@@ -34,7 +32,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
   public readonly headers: Headers
 
-  public readonly payload: InquirySerializedPayload
+  public readonly payload: SerializedPayload
 
   public readonly abortController: AbortController
 
@@ -78,7 +76,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
     method: string,
     url: URL,
     headers: Headers,
-    payload: InquirySerializedPayload,
+    payload: SerializedPayload,
     abortController: AbortController,
     items: InquiryItems,
     inquiringEventChannel: InquiringEventChannel,

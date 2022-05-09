@@ -1,6 +1,6 @@
-import type { InquiryPayload } from '../../../../inquiry'
+import type { Payload } from '../../../payload'
 
-export class TextInquiryPayload implements InquiryPayload {
+export class TextPayload implements Payload {
   private readonly value: string | number
 
   public constructor(value: string | number) {

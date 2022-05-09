@@ -1,6 +1,6 @@
-import type { InquiryPayload } from '../../../../inquiry'
+import type { Payload } from '../../../payload'
 
-export class ArrayBufferInquiryPayload implements InquiryPayload {
+export class ArrayBufferPayload implements Payload {
   private readonly value: ArrayBuffer | ArrayBufferView
 
   public constructor(value: ArrayBuffer | ArrayBufferView) {

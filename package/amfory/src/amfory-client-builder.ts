@@ -22,17 +22,17 @@ import {
   ReplyBodyJsonReader,
   ReplyBodyTextReader,
   BasicInquiryBuilderFactory,
-  FormDataInquiryPayloadFactory,
-  BlobInquiryPayloadFactory,
-  JsonInquiryPayloadFactory,
-  TextInquiryPayloadFactory,
   BasicLoggingSettingsBuilder,
   BasicInquirySettingsBuilder,
-  ArrayBufferInquiryPayloadFactory,
   BasicAmforyClient,
   BasicInquiringEventFactory,
   BasicRetryingEventFactory,
   BasicReplyingEventFactory,
+  FormDataPayloadFactory,
+  ArrayBufferPayloadFactory,
+  BlobPayloadFactory,
+  JsonPayloadFactory,
+  TextPayloadFactory,
 } from './interior'
 
 import type { ClientPluginBuilder } from './plugin'
@@ -93,12 +93,11 @@ export class AmforyClientBuilder {
 
     const url = new URL(this.url)
 
-    const formDataInquiryPayloadFactory = new FormDataInquiryPayloadFactory()
-    const arrayBufferInquiryPayloadFactory =
-      new ArrayBufferInquiryPayloadFactory()
-    const blobInquiryPayloadFactory = new BlobInquiryPayloadFactory()
-    const jsonInquiryPayloadFactory = new JsonInquiryPayloadFactory()
-    const textInquiryPayloadFactory = new TextInquiryPayloadFactory()
+    const formDataPayloadFactory = new FormDataPayloadFactory()
+    const arrayBufferPayloadFactory = new ArrayBufferPayloadFactory()
+    const blobPayloadFactory = new BlobPayloadFactory()
+    const jsonPayloadFactory = new JsonPayloadFactory()
+    const textPayloadFactory = new TextPayloadFactory()
 
     const replyBodyArrayBufferReader = new ReplyBodyArrayBufferReader()
     const replyBodyBlobReader = new ReplyBodyBlobReader()
@@ -132,11 +131,11 @@ export class AmforyClientBuilder {
       inquiringEventChannel,
       replyingEventChannel,
       retryingEventChannel,
-      arrayBufferInquiryPayloadFactory,
-      blobInquiryPayloadFactory,
-      formDataInquiryPayloadFactory,
-      jsonInquiryPayloadFactory,
-      textInquiryPayloadFactory,
+      arrayBufferPayloadFactory,
+      blobPayloadFactory,
+      formDataPayloadFactory,
+      jsonPayloadFactory,
+      textPayloadFactory,
       replyBodyArrayBufferReader,
       replyBodyBlobReader,
       replyBodyFormDataReader,

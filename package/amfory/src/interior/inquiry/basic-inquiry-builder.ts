@@ -1,8 +1,6 @@
-import type {
-  InquiryBuilder,
-  InquiryItems,
-  InquiryPayload,
-} from '../../inquiry'
+import type { InquiryBuilder, InquiryItems } from '../../inquiry'
+
+import type { Payload } from '../../payload'
 
 import type { InquiryPluginBuilder } from '../../plugin'
 
@@ -17,6 +15,14 @@ import type {
 } from '../event'
 
 import type {
+  ArrayBufferPayloadFactory,
+  BlobPayloadFactory,
+  FormDataPayloadFactory,
+  JsonPayloadFactory,
+  TextPayloadFactory,
+} from '../payload'
+
+import type {
   ReplyBodyArrayBufferReader,
   ReplyBodyBlobReader,
   ReplyBodyFormDataReader,
@@ -26,14 +32,6 @@ import type {
 
 import type { InquiryFactory } from './inquiry-factory'
 
-import type {
-  ArrayBufferInquiryPayloadFactory,
-  BlobInquiryPayloadFactory,
-  FormDataInquiryPayloadFactory,
-  JsonInquiryPayloadFactory,
-  TextInquiryPayloadFactory,
-} from './payload'
-
 export class BasicInquiryBuilder implements InquiryBuilder {
   private readonly method: string
 
@@ -41,7 +39,7 @@ export class BasicInquiryBuilder implements InquiryBuilder {
 
   private readonly headers: Headers
 
-  private payload: InquiryPayload
+  private payload: Payload
 
   private rejectionDelay: number
 
@@ -57,15 +55,15 @@ export class BasicInquiryBuilder implements InquiryBuilder {
 
   private readonly retryingEventChannel: RetryingEventChannel
 
-  private readonly arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory
+  private readonly arrayBufferPayloadFactory: ArrayBufferPayloadFactory
 
-  private readonly blobPayloadFactory: BlobInquiryPayloadFactory
+  private readonly blobPayloadFactory: BlobPayloadFactory
 
-  private readonly formDataPayloadFactory: FormDataInquiryPayloadFactory
+  private readonly formDataPayloadFactory: FormDataPayloadFactory
 
-  private readonly jsonPayloadFactory: JsonInquiryPayloadFactory
+  private readonly jsonPayloadFactory: JsonPayloadFactory
 
-  private readonly textPayloadFactory: TextInquiryPayloadFactory
+  private readonly textPayloadFactory: TextPayloadFactory
 
   private readonly replyBodyArrayBufferReader: ReplyBodyArrayBufferReader
 
@@ -85,7 +83,7 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     method: string,
     url: URL,
     headers: Headers,
-    payload: InquiryPayload,
+    payload: Payload,
     rejectionDelay: number,
     attemptRejectionDelay: number,
     abortController: AbortController,
@@ -93,11 +91,11 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     inquiringEventChannel: InquiringEventChannel,
     replyingEventChannel: ReplyingEventChannel,
     retryingEventChannel: RetryingEventChannel,
-    arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory,
-    blobPayloadFactory: BlobInquiryPayloadFactory,
-    formDataPayloadFactory: FormDataInquiryPayloadFactory,
-    jsonPayloadFactory: JsonInquiryPayloadFactory,
-    textPayloadFactory: TextInquiryPayloadFactory,
+    arrayBufferPayloadFactory: ArrayBufferPayloadFactory,
+    blobPayloadFactory: BlobPayloadFactory,
+    formDataPayloadFactory: FormDataPayloadFactory,
+    jsonPayloadFactory: JsonPayloadFactory,
+    textPayloadFactory: TextPayloadFactory,
     replyBodyArrayBufferReader: ReplyBodyArrayBufferReader,
     replyBodyBlobReader: ReplyBodyBlobReader,
     replyBodyFormDataReader: ReplyBodyFormDataReader,
@@ -201,7 +199,7 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     return this.setPayload(this.textPayloadFactory.create(value))
   }
 
-  public setPayload(payload: InquiryPayload): this {
+  public setPayload(payload: Payload): this {
     this.payload = payload
 
     return this

@@ -1,6 +1,6 @@
-import type { InquiryPayload } from '../../../../inquiry'
+import type { Payload } from '../../../payload'
 
-export class BlobInquiryPayload implements InquiryPayload {
+export class BlobPayload implements Payload {
   private readonly value: Blob
 
   public constructor(value: Blob) {
