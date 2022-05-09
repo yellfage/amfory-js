@@ -66,8 +66,6 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
   private state = InquiryState.None
 
-  private attemptAbortController = new AbortController()
-
   private rejectionTimeoutId = 0
 
   private attemptRejectionTimeoutId = 0
@@ -119,8 +117,6 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
     this.ensureSendingPossible()
 
-    this.registerAbortionHandler()
-
     this.runRejectionTimeout()
 
     this.state = InquiryState.Starting
@@ -145,8 +141,6 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
     } finally {
       this.clearRejectionTimeout()
 
-      this.unregisterAbortionHandler()
-
       this.retryDelayScheme.reset()
     }
   }
@@ -161,7 +155,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
         method: this.method,
         headers: this.headers,
         body: this.payload,
-        signal: this.attemptAbortController.signal,
+        signal: this.abortController.signal,
       })
 
       if (!this.retryControl.confirmStatus(response.status)) {
@@ -180,16 +174,14 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
         throw new AbortError('Inquiry aborted')
       }
 
-      if (this.attemptAbortController.signal.aborted) {
-        this.attemptAbortController = new AbortController()
-      } else if (this.retryControl.confirmError(error)) {
+      if (this.retryControl.confirmError(error)) {
         this.logger.logError(error)
-      } else {
-        throw error
+
+        // eslint-disable-next-line @typescript-eslint/return-await
+        return this.performRetry()
       }
 
-      // eslint-disable-next-line @typescript-eslint/return-await
-      return this.performRetry()
+      throw error
     } finally {
       this.clearAttemptRejectionTimeout()
     }
@@ -225,17 +217,6 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
     return this.performAttempt()
   }
 
-  private registerAbortionHandler(): void {
-    this.abortController.signal.addEventListener('abort', this.handleAbortion)
-  }
-
-  private unregisterAbortionHandler(): void {
-    this.abortController.signal.removeEventListener(
-      'abort',
-      this.handleAbortion,
-    )
-  }
-
   private runRejectionTimeout(): void {
     if (this.rejectionDelay <= 0) {
       return
@@ -252,7 +233,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
     }
 
     this.attemptRejectionTimeoutId = setTimeout(() => {
-      this.attemptAbortController.abort()
+      this.abortController.abort()
     }, this.attemptRejectionDelay) as unknown as number
   }
 
@@ -281,9 +262,5 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
         }`,
       )
     }
-  }
-
-  private readonly handleAbortion = (): void => {
-    this.attemptAbortController.abort()
   }
 }
