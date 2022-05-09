@@ -232,7 +232,7 @@ export class BasicInquiryBuilder implements InquiryBuilder {
       this.method,
       this.url,
       this.headers,
-      await this.payload.serialize(this.headers),
+      this.payload,
       this.abortController,
       this.items,
       this.inquiringEventChannel,

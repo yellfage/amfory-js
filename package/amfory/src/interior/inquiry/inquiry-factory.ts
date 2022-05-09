@@ -1,6 +1,6 @@
 import type { Inquiry, InquiryItems } from '../../inquiry'
 
-import type { SerializedPayload } from '../../payload'
+import type { Payload } from '../../payload'
 
 import type { ReplyBodyReader } from '../../reply'
 
@@ -15,7 +15,7 @@ export interface InquiryFactory {
     method: string,
     url: URL,
     headers: Headers,
-    payload: SerializedPayload,
+    payload: Payload,
     abortController: AbortController,
     items: InquiryItems,
     inquiringEventChannel: InquiringEventChannel,

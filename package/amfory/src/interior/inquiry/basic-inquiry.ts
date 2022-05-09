@@ -6,7 +6,7 @@ import type { Inquiry, InquiryItems } from '../../inquiry'
 
 import type { Logger } from '../../logging'
 
-import type { SerializedPayload } from '../../payload'
+import type { Payload } from '../../payload'
 
 import type { Reply, ReplyBodyReader } from '../../reply'
 
@@ -32,7 +32,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
   public readonly headers: Headers
 
-  public readonly payload: SerializedPayload
+  public readonly payload: Payload
 
   public readonly abortController: AbortController
 
@@ -74,7 +74,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
     method: string,
     url: URL,
     headers: Headers,
-    payload: SerializedPayload,
+    payload: Payload,
     abortController: AbortController,
     items: InquiryItems,
     inquiringEventChannel: InquiringEventChannel,
@@ -154,7 +154,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
       const response = await fetch(this.url.toString(), {
         method: this.method,
         headers: this.headers,
-        body: this.payload,
+        body: await this.payload.serialize(this.headers),
         signal: this.abortController.signal,
       })
 

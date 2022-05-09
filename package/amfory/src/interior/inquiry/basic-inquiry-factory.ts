@@ -2,7 +2,7 @@ import type { Inquiry, InquiryItems } from '../../inquiry'
 
 import type { Logger } from '../../logging'
 
-import type { SerializedPayload } from '../../payload'
+import type { Payload } from '../../payload'
 
 import type { ReplyBodyReader } from '../../reply'
 
@@ -60,7 +60,7 @@ export class BasicInquiryFactory implements InquiryFactory {
     method: string,
     url: URL,
     headers: Headers,
-    payload: SerializedPayload,
+    payload: Payload,
     abortController: AbortController,
     items: InquiryItems,
     inquiringEventChannel: InquiringEventChannel,
