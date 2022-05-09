@@ -7,10 +7,10 @@ import type { RetryControlBuilder } from '../retry-control-builder'
 import { BasicRetryControl } from './basic-retry-control'
 
 export class BasicRetryControlBuilder implements RetryControlBuilder {
-  private retryableStatuses: ReplyStatus[]
+  private statuses: ReplyStatus[]
 
   public constructor(
-    retryableStatuses: ReplyStatus[] = [
+    statuses: ReplyStatus[] = [
       ReplyStatus.RequestTimeout,
       ReplyStatus.InternalServerError,
       ReplyStatus.ServiceUnavailable,
@@ -24,26 +24,26 @@ export class BasicRetryControlBuilder implements RetryControlBuilder {
       ReplyStatus.TimeoutOccurred,
     ],
   ) {
-    this.retryableStatuses = retryableStatuses
+    this.statuses = statuses
   }
 
-  public setRetryableStatuses(statuses: ReplyStatus[]): this {
-    this.retryableStatuses = statuses
+  public setStatuses(statuses: ReplyStatus[]): this {
+    this.statuses = statuses
 
     return this
   }
 
-  public addRetryableStatuses(statuses: ReplyStatus[]): this {
-    this.retryableStatuses.push(...statuses)
+  public addStatuses(statuses: ReplyStatus[]): this {
+    this.statuses.push(...statuses)
 
     return this
   }
 
   public build(): RetryControl {
-    return new BasicRetryControl(this.retryableStatuses)
+    return new BasicRetryControl(this.statuses)
   }
 
   public clone(): RetryControlBuilder {
-    return new BasicRetryControlBuilder(this.retryableStatuses.slice())
+    return new BasicRetryControlBuilder(this.statuses.slice())
   }
 }
