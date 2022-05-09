@@ -17,11 +17,7 @@ module.exports = {
     path: OUTPUT_PATH,
     libraryTarget: 'commonjs2',
   },
-  externals: [
-    'core-js/web/url',
-    'abort-controller/polyfill',
-    'cross-fetch/polyfill',
-  ],
+  externals: ['cross-fetch/polyfill'],
   resolve: {
     extensions: ['.ts', '.js'],
   },

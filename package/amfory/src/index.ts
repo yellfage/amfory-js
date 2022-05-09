@@ -1,7 +1,3 @@
-import 'core-js/web/url'
-
-import 'abort-controller/polyfill'
-
 import 'cross-fetch/polyfill'
 
 export * from './configuration'
