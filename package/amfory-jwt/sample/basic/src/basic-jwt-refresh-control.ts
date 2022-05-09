@@ -2,7 +2,7 @@ import type { Reply } from '@yellfage/amfory'
 
 import { ReplyStatus } from '@yellfage/amfory'
 
-import type { JwtPair, JwtRefreshControl } from '../../../src'
+import type { JwtPair, JwtRefreshControl } from '@yellfage/amfory-jwt'
 
 import type { AccessService } from './access-service'
 

@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import { AmforyClientBuilder } from '@yellfage/amfory'
 
-import type { JwtPairStash, JwtRefreshControl } from '../../../src'
+import type { JwtPairStash, JwtRefreshControl } from '@yellfage/amfory-jwt'
 
-import { BasicJwtPairStash, JwtPluginBuilder } from '../../../src'
+import { BasicJwtPairStash, JwtPluginBuilder } from '@yellfage/amfory-jwt'
 
 import { AccessService } from './access-service'
 
