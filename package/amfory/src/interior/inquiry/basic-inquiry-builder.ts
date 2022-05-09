@@ -34,8 +34,6 @@ import type {
   TextInquiryPayloadFactory,
 } from './payload'
 
-import type { InquiryShapeFactory } from './shape'
-
 export class BasicInquiryBuilder implements InquiryBuilder {
   private readonly method: string
 
@@ -79,8 +77,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
 
   private readonly replyBodyTextReader: ReplyBodyTextReader
 
-  private readonly shapeFactory: InquiryShapeFactory
-
   private readonly factory: InquiryFactory
 
   private readonly pluginBuilders: InquiryPluginBuilder[] = []
@@ -107,7 +103,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     replyBodyFormDataReader: ReplyBodyFormDataReader,
     replyBodyJsonReader: ReplyBodyJsonReader,
     replyBodyTextReader: ReplyBodyTextReader,
-    shapeFactory: InquiryShapeFactory,
     factory: InquiryFactory,
   ) {
     this.method = method
@@ -131,7 +126,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     this.replyBodyFormDataReader = replyBodyFormDataReader
     this.replyBodyJsonReader = replyBodyJsonReader
     this.replyBodyTextReader = replyBodyTextReader
-    this.shapeFactory = shapeFactory
     this.factory = factory
   }
 
@@ -236,22 +230,18 @@ export class BasicInquiryBuilder implements InquiryBuilder {
   public async fetch<TResult>(
     replyBodyReader: ReplyBodyReader<TResult>,
   ): Promise<Reply<TResult>> {
-    const shape = this.shapeFactory.create(
+    const inquiry = this.factory.create(
       this.method,
       this.url,
       this.headers,
       await this.payload.serialize(this.headers),
-      this.rejectionDelay,
-      this.attemptRejectionDelay,
       this.abortController,
-    )
-
-    const inquiry = this.factory.create(
-      shape,
       this.items,
       this.inquiringEventChannel,
       this.replyingEventChannel,
       this.retryingEventChannel,
+      this.rejectionDelay,
+      this.attemptRejectionDelay,
       replyBodyReader,
     )
 

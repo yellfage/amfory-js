@@ -2,7 +2,11 @@ import delay from 'delay'
 
 import { AbortError } from '../../abort-error'
 
-import type { Inquiry, InquiryItems, InquiryShape } from '../../inquiry'
+import type {
+  Inquiry,
+  InquiryItems,
+  InquirySerializedPayload,
+} from '../../inquiry'
 
 import type { Logger } from '../../logging'
 
@@ -24,7 +28,15 @@ import type { ReplyFactory } from '../reply'
 import { InquiryState } from './inquiry-state'
 
 export class BasicInquiry<TResult> implements Inquiry<TResult> {
-  public readonly shape: InquiryShape
+  public readonly method: string
+
+  public readonly url: URL
+
+  public readonly headers: Headers
+
+  public readonly payload: InquirySerializedPayload
+
+  public readonly abortController: AbortController
 
   public readonly items: InquiryItems
 
@@ -33,6 +45,10 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
   public readonly replying: ReplyingEventChannel
 
   public readonly retrying: RetryingEventChannel
+
+  private readonly rejectionDelay: number
+
+  private readonly attemptRejectionDelay: number
 
   private readonly replyBodyReader: ReplyBodyReader<TResult>
 
@@ -59,11 +75,17 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
   private attemptRejectionTimeoutId = 0
 
   public constructor(
-    shape: InquiryShape,
+    method: string,
+    url: URL,
+    headers: Headers,
+    payload: InquirySerializedPayload,
+    abortController: AbortController,
     items: InquiryItems,
     inquiringEventChannel: InquiringEventChannel,
     replyingEventChannel: ReplyingEventChannel,
     retryingEventChannel: RetryingEventChannel,
+    rejectionDelay: number,
+    attemptRejectionDelay: number,
     replyBodyReader: ReplyBodyReader<TResult>,
     replyFactory: ReplyFactory,
     retryControl: RetryControl,
@@ -73,11 +95,17 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
     retryingEventFactory: RetryingEventFactory,
     logger: Logger,
   ) {
-    this.shape = shape
+    this.method = method
+    this.url = url
+    this.headers = headers
+    this.payload = payload
+    this.abortController = abortController
     this.items = items
     this.inquiring = inquiringEventChannel
     this.replying = replyingEventChannel
     this.retrying = retryingEventChannel
+    this.rejectionDelay = rejectionDelay
+    this.attemptRejectionDelay = attemptRejectionDelay
     this.replyBodyReader = replyBodyReader
     this.replyFactory = replyFactory
     this.retryControl = retryControl
@@ -131,10 +159,10 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
       this.runAttemptRejectionTimeout()
 
-      const response = await fetch(this.shape.url.toString(), {
-        method: this.shape.method,
-        headers: this.shape.headers,
-        body: this.shape.payload,
+      const response = await fetch(this.url.toString(), {
+        method: this.method,
+        headers: this.headers,
+        body: this.payload,
         signal: this.attemptAbortController.signal,
       })
 
@@ -150,7 +178,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
       // eslint-disable-next-line @typescript-eslint/return-await
       return this.performRetry()
     } catch (error: unknown) {
-      if (this.shape.abortController.signal.aborted) {
+      if (this.abortController.signal.aborted) {
         throw new AbortError('Inquiry aborted')
       }
 
@@ -186,10 +214,10 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
     try {
       await delay(retryDelay, {
-        signal: this.shape.abortController.signal,
+        signal: this.abortController.signal,
       })
     } catch (error: unknown) {
-      if (this.shape.abortController.signal.aborted) {
+      if (this.abortController.signal.aborted) {
         throw new AbortError('Inquiry aborted while waiting for retry')
       }
 
@@ -200,41 +228,34 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
   }
 
   private registerAbortionHandler(): void {
-    this.shape.abortController.signal.addEventListener(
-      'abort',
-      this.handleAbortion,
-    )
+    this.abortController.signal.addEventListener('abort', this.handleAbortion)
   }
 
   private unregisterAbortionHandler(): void {
-    this.shape.abortController.signal.removeEventListener(
+    this.abortController.signal.removeEventListener(
       'abort',
       this.handleAbortion,
     )
   }
 
   private runRejectionTimeout(): void {
-    const { rejectionDelay } = this.shape
-
-    if (rejectionDelay <= 0) {
+    if (this.rejectionDelay <= 0) {
       return
     }
 
     this.rejectionTimeoutId = setTimeout(() => {
-      this.shape.abortController.abort()
-    }, rejectionDelay) as unknown as number
+      this.abortController.abort()
+    }, this.rejectionDelay) as unknown as number
   }
 
   private runAttemptRejectionTimeout(): void {
-    const { attemptRejectionDelay } = this.shape
-
-    if (attemptRejectionDelay <= 0) {
+    if (this.attemptRejectionDelay <= 0) {
       return
     }
 
     this.attemptRejectionTimeoutId = setTimeout(() => {
       this.attemptAbortController.abort()
-    }, attemptRejectionDelay) as unknown as number
+    }, this.attemptRejectionDelay) as unknown as number
   }
 
   private clearRejectionTimeout(): void {
@@ -246,7 +267,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
   }
 
   private ensureAbortControllerValid(): void {
-    if (this.shape.abortController.signal.aborted) {
+    if (this.abortController.signal.aborted) {
       throw new Error('Provided AbortController is already aborted')
     }
   }

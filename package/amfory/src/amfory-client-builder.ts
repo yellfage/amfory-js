@@ -28,7 +28,6 @@ import {
   TextInquiryPayloadFactory,
   BasicLoggingSettingsBuilder,
   BasicInquirySettingsBuilder,
-  BasicInquiryShapeFactory,
   ArrayBufferInquiryPayloadFactory,
   BasicAmforyClient,
   BasicInquiringEventFactory,
@@ -96,8 +95,6 @@ export class AmforyClientBuilder {
     const replyingEventChannel = new BasicEventChannel<ReplyingEventHandler>()
     const retryingEventChannel = new BasicEventChannel<RetryingEventHandler>()
 
-    const inquiryShapeFactory = new BasicInquiryShapeFactory()
-
     const replyFactory = new BasicReplyFactory()
     const inquiringEventFactory = new BasicInquiringEventFactory()
     const retryingEventFactory = new BasicRetryingEventFactory()
@@ -131,7 +128,6 @@ export class AmforyClientBuilder {
       replyBodyFormDataReader,
       replyBodyJsonReader,
       replyBodyTextReader,
-      inquiryShapeFactory,
       inquiryFactory,
     )
 

@@ -8,10 +8,15 @@ import type { Reply } from '../reply'
 
 import type { InquiryItems } from './inquiry-items'
 
-import type { InquiryShape } from './inquiry-shape'
+import type { InquirySerializedPayload } from './payload'
 
 export interface Inquiry<TResult = unknown> {
-  readonly shape: InquiryShape
+  readonly method: string
+  readonly url: URL
+  readonly headers: Headers
+  readonly payload: InquirySerializedPayload
+  readonly abortController: AbortController
+
   readonly items: InquiryItems
 
   readonly inquiring: InquiringEventPool

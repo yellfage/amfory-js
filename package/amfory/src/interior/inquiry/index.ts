@@ -1,5 +1,4 @@
 export * from './payload'
-export * from './shape'
 
 export * from './inquiry-builder-factory'
 export * from './basic-inquiry-builder-factory'

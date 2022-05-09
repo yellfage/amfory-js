@@ -1,4 +1,8 @@
-import type { InquiryShape, Inquiry, InquiryItems } from '../../inquiry'
+import type {
+  Inquiry,
+  InquiryItems,
+  InquirySerializedPayload,
+} from '../../inquiry'
 
 import type { Logger } from '../../logging'
 
@@ -55,19 +59,31 @@ export class BasicInquiryFactory implements InquiryFactory {
   }
 
   public create<TResult>(
-    shape: InquiryShape,
+    method: string,
+    url: URL,
+    headers: Headers,
+    payload: InquirySerializedPayload,
+    abortController: AbortController,
     items: InquiryItems,
     inquiringEventChannel: InquiringEventChannel,
     replyingEventChannel: ReplyingEventChannel,
     retryingEventChannel: RetryingEventChannel,
+    rejectionDelay: number,
+    attemptRejectionDelay: number,
     replyBodyReader: ReplyBodyReader<TResult>,
   ): Inquiry<TResult> {
     return new BasicInquiry(
-      shape,
+      method,
+      url,
+      headers,
+      payload,
+      abortController,
       items,
       inquiringEventChannel,
       replyingEventChannel,
       retryingEventChannel,
+      rejectionDelay,
+      attemptRejectionDelay,
       replyBodyReader,
       this.replyFactory,
       this.retryControl,

@@ -32,8 +32,6 @@ import type {
 
 import { EmptyInquiryPayload } from './payload'
 
-import type { InquiryShapeFactory } from './shape'
-
 export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
   private readonly baseUrl: URL
 
@@ -69,8 +67,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
 
   private readonly replyBodyTextReader: ReplyBodyTextReader
 
-  private readonly shapeFactory: InquiryShapeFactory
-
   private readonly factory: InquiryFactory
 
   public constructor(
@@ -91,7 +87,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     replyBodyFormDataReader: ReplyBodyFormDataReader,
     replyBodyJsonReader: ReplyBodyJsonReader,
     replyBodyTextReader: ReplyBodyTextReader,
-    shapeFactory: InquiryShapeFactory,
     factory: InquiryFactory,
   ) {
     this.baseUrl = baseUrl
@@ -111,7 +106,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     this.replyBodyFormDataReader = replyBodyFormDataReader
     this.replyBodyJsonReader = replyBodyJsonReader
     this.replyBodyTextReader = replyBodyTextReader
-    this.shapeFactory = shapeFactory
     this.factory = factory
   }
 
@@ -138,7 +132,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
       this.replyBodyFormDataReader,
       this.replyBodyJsonReader,
       this.replyBodyTextReader,
-      this.shapeFactory,
       this.factory,
     )
   }
