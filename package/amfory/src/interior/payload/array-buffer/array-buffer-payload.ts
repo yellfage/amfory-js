@@ -7,9 +7,9 @@ export class ArrayBufferPayload implements Payload {
     this.value = value
   }
 
-  public serialize(headers: Headers): Promise<ArrayBuffer | ArrayBufferView> {
+  public serialize(headers: Headers): ArrayBuffer | ArrayBufferView {
     headers.set('content-type', 'application/octet-stream')
 
-    return Promise.resolve(this.value)
+    return this.value
   }
 }

@@ -7,9 +7,9 @@ export class JsonPayload<TValue> implements Payload {
     this.value = value
   }
 
-  public serialize(headers: Headers): Promise<string> {
+  public serialize(headers: Headers): string {
     headers.set('content-type', 'application/json')
 
-    return Promise.resolve(JSON.stringify(this.value))
+    return JSON.stringify(this.value)
   }
 }

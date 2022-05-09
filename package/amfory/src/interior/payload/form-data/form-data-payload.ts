@@ -7,7 +7,7 @@ export class FormDataPayload implements Payload {
     this.value = value
   }
 
-  public serialize(): Promise<FormData> {
-    return Promise.resolve(this.value)
+  public serialize(): FormData {
+    return this.value
   }
 }

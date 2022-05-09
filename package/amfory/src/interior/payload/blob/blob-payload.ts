@@ -7,7 +7,7 @@ export class BlobPayload implements Payload {
     this.value = value
   }
 
-  public serialize(): Promise<Blob> {
-    return Promise.resolve(this.value)
+  public serialize(): Blob {
+    return this.value
   }
 }

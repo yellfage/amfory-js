@@ -7,7 +7,7 @@ export class TextPayload implements Payload {
     this.value = value
   }
 
-  public serialize(): Promise<string> {
-    return Promise.resolve(this.value.toString())
+  public serialize(): string {
+    return this.value.toString()
   }
 }

@@ -154,7 +154,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
       const response = await fetch(this.url.toString(), {
         method: this.method,
         headers: this.headers,
-        body: await this.payload.serialize(this.headers),
+        body: this.payload.serialize(this.headers),
         signal: this.abortController.signal,
       })
 
