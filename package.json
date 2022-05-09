@@ -6,15 +6,15 @@
     "eslint:root:fix": "npm run eslint:root -- -- --fix"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.0.2",
-    "@commitlint/prompt-cli": "^16.0.0",
+    "@commitlint/cli": "^16.2.4",
+    "@commitlint/prompt-cli": "^16.2.4",
     "@yellfage/eslint-config-typescript": "^1.0.0",
-    "commitlint": "^16.0.2",
-    "eslint": "^8.8.0",
-    "eslint-config-prettier": "^8.3.0",
+    "commitlint": "^16.2.4",
+    "eslint": "^8.13.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.2.0",
-    "prettier": "^2.5.1"
+    "husky": "^8.0.1",
+    "lint-staged": "^12.4.1",
+    "prettier": "^2.6.2"
   }
 }
