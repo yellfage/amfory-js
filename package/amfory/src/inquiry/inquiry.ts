@@ -1,4 +1,8 @@
-import type { EventHandlerMap } from '../event-handler-map'
+import type {
+  InquiringEventPool,
+  ReplyingEventPool,
+  RetryingEventPool,
+} from '../event'
 
 import type { Reply } from '../reply'
 
@@ -10,15 +14,9 @@ export interface Inquiry<TResult = unknown> {
   readonly shape: InquiryShape
   readonly items: InquiryItems
 
-  on<TEventName extends keyof EventHandlerMap>(
-    eventName: TEventName,
-    handler: EventHandlerMap[TEventName],
-  ): EventHandlerMap[TEventName]
-
-  off<TEventName extends keyof EventHandlerMap>(
-    eventName: TEventName,
-    handler: EventHandlerMap[TEventName],
-  ): void
+  readonly inquiring: InquiringEventPool
+  readonly replying: ReplyingEventPool
+  readonly retrying: RetryingEventPool
 
   send(): Promise<Reply<TResult>>
 }

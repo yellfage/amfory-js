@@ -1,10 +1,6 @@
-import type { EventEmitter } from '@yellfage/event-emitter'
-
 import delay from 'delay'
 
 import { AbortError } from '../../abort-error'
-
-import type { EventHandlerMap } from '../../event-handler-map'
 
 import type { Inquiry, InquiryItems, InquiryShape } from '../../inquiry'
 
@@ -15,14 +11,15 @@ import type { Reply, ReplyBodyReader } from '../../reply'
 import type { RetryControl, RetryDelayScheme } from '../../retry'
 
 import type {
-  InquiryEventFactory,
-  ReplyEventFactory,
-  RetryEventFactory,
+  InquiringEventChannel,
+  InquiringEventFactory,
+  ReplyingEventChannel,
+  ReplyingEventFactory,
+  RetryingEventChannel,
+  RetryingEventFactory,
 } from '../event'
 
 import type { ReplyFactory } from '../reply'
-
-import type { RetryContextFactory } from '../retry'
 
 import { InquiryState } from './inquiry-state'
 
@@ -31,7 +28,11 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
   public readonly items: InquiryItems
 
-  private readonly eventEmitter: EventEmitter<EventHandlerMap>
+  public readonly inquiring: InquiringEventChannel
+
+  public readonly replying: ReplyingEventChannel
+
+  public readonly retrying: RetryingEventChannel
 
   private readonly replyBodyReader: ReplyBodyReader<TResult>
 
@@ -41,13 +42,11 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
   private readonly retryDelayScheme: RetryDelayScheme
 
-  private readonly inquiryEventFactory: InquiryEventFactory
+  private readonly inquiringEventFactory: InquiringEventFactory
 
-  private readonly retryEventFactory: RetryEventFactory
+  private readonly replyingEventFactory: ReplyingEventFactory
 
-  private readonly retryContextFactory: RetryContextFactory
-
-  private readonly replyEventFactory: ReplyEventFactory
+  private readonly retryingEventFactory: RetryingEventFactory
 
   private readonly logger: Logger
 
@@ -62,43 +61,31 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
   public constructor(
     shape: InquiryShape,
     items: InquiryItems,
-    eventEmitter: EventEmitter<EventHandlerMap>,
+    inquiringEventChannel: InquiringEventChannel,
+    replyingEventChannel: ReplyingEventChannel,
+    retryingEventChannel: RetryingEventChannel,
     replyBodyReader: ReplyBodyReader<TResult>,
     replyFactory: ReplyFactory,
     retryControl: RetryControl,
     retryDelayScheme: RetryDelayScheme,
-    inquiryEventFactory: InquiryEventFactory,
-    retryEventFactory: RetryEventFactory,
-    retryContextFactory: RetryContextFactory,
-    replyEventFactory: ReplyEventFactory,
+    inquiringEventFactory: InquiringEventFactory,
+    replyingEventFactory: ReplyingEventFactory,
+    retryingEventFactory: RetryingEventFactory,
     logger: Logger,
   ) {
     this.shape = shape
     this.items = items
-    this.eventEmitter = eventEmitter
+    this.inquiring = inquiringEventChannel
+    this.replying = replyingEventChannel
+    this.retrying = retryingEventChannel
     this.replyBodyReader = replyBodyReader
     this.replyFactory = replyFactory
     this.retryControl = retryControl
     this.retryDelayScheme = retryDelayScheme
-    this.inquiryEventFactory = inquiryEventFactory
-    this.retryEventFactory = retryEventFactory
-    this.retryContextFactory = retryContextFactory
-    this.replyEventFactory = replyEventFactory
+    this.inquiringEventFactory = inquiringEventFactory
+    this.replyingEventFactory = replyingEventFactory
+    this.retryingEventFactory = retryingEventFactory
     this.logger = logger
-  }
-
-  public on<TEventName extends keyof EventHandlerMap>(
-    eventName: TEventName,
-    handler: EventHandlerMap[TEventName],
-  ): EventHandlerMap[TEventName] {
-    return this.eventEmitter.on(eventName, handler)
-  }
-
-  public off<TEventName extends keyof EventHandlerMap>(
-    eventName: TEventName,
-    handler: EventHandlerMap[TEventName],
-  ): void {
-    this.eventEmitter.off(eventName, handler)
   }
 
   public async send(): Promise<Reply<TResult>> {
@@ -112,20 +99,23 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
     this.state = InquiryState.Starting
 
-    const inquiryEvent = this.inquiryEventFactory.create(this)
+    const inquiringEvent = this.inquiringEventFactory.create(this)
 
-    await this.eventEmitter.emit('inquiry', inquiryEvent)
+    await this.inquiring.emit(inquiringEvent)
 
     try {
       const reply = await this.performAttempt()
 
       this.state = InquiryState.Replying
 
-      const replyEvent = this.replyEventFactory.create<TResult>(this, reply)
+      const replyingEvent = this.replyingEventFactory.create<TResult>(
+        this,
+        reply,
+      )
 
-      await this.eventEmitter.emit('reply', replyEvent)
+      await this.replying.emit(replyingEvent)
 
-      return replyEvent.reply
+      return replyingEvent.reply
     } finally {
       this.clearRejectionTimeout()
 
@@ -184,11 +174,9 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
     const retryDelay = this.retryDelayScheme.moveNext()
 
-    const context = this.retryContextFactory.create(retryDelay)
+    const event = this.retryingEventFactory.create(this, retryDelay)
 
-    const event = this.retryEventFactory.create(this, context)
-
-    await this.eventEmitter.emit('retry', event)
+    await this.retrying.emit(event)
 
     if (retryDelay <= 0) {
       return this.performAttempt()

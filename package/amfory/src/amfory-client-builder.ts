@@ -1,4 +1,4 @@
-import { EventEmitter } from '@yellfage/event-emitter'
+import { BasicEventChannel } from '@yellfage/events'
 
 import type { AmforyClient } from './amfory-client'
 
@@ -7,7 +7,11 @@ import type {
   InquirySettingsBuilder,
 } from './configuration'
 
-import type { EventHandlerMap } from './event-handler-map'
+import type {
+  InquiringEventHandler,
+  ReplyingEventHandler,
+  RetryingEventHandler,
+} from './event'
 
 import {
   BasicReplyFactory,
@@ -22,15 +26,14 @@ import {
   BlobInquiryPayloadFactory,
   JsonInquiryPayloadFactory,
   TextInquiryPayloadFactory,
-  BasicInquiryEventFactory,
-  BasicRetryEventFactory,
-  BasicReplyEventFactory,
-  BasicRetryContextFactory,
   BasicLoggingSettingsBuilder,
   BasicInquirySettingsBuilder,
   BasicInquiryShapeFactory,
   ArrayBufferInquiryPayloadFactory,
   BasicAmforyClient,
+  BasicInquiringEventFactory,
+  BasicRetryingEventFactory,
+  BasicReplyingEventFactory,
 } from './interior'
 
 export class AmforyClientBuilder {
@@ -91,24 +94,24 @@ export class AmforyClientBuilder {
     const replyBodyJsonReader = new ReplyBodyJsonReader()
     const replyBodyTextReader = new ReplyBodyTextReader()
 
-    const eventEmitter = new EventEmitter<EventHandlerMap>()
+    const inquiringEventChannel = new BasicEventChannel<InquiringEventHandler>()
+    const replyingEventChannel = new BasicEventChannel<ReplyingEventHandler>()
+    const retryingEventChannel = new BasicEventChannel<RetryingEventHandler>()
 
     const inquiryShapeFactory = new BasicInquiryShapeFactory()
 
     const replyFactory = new BasicReplyFactory()
-    const inquiryEventFactory = new BasicInquiryEventFactory()
-    const retryEventFactory = new BasicRetryEventFactory()
-    const retryContextFactory = new BasicRetryContextFactory()
-    const replyEventFactory = new BasicReplyEventFactory()
+    const inquiringEventFactory = new BasicInquiringEventFactory()
+    const retryingEventFactory = new BasicRetryingEventFactory()
+    const replyingEventFactory = new BasicReplyingEventFactory()
 
     const inquiryFactory = new BasicInquiryFactory(
       replyFactory,
       inquirySettings.retryControl,
       inquirySettings.retryDelayScheme,
-      inquiryEventFactory,
-      retryEventFactory,
-      retryContextFactory,
-      replyEventFactory,
+      inquiringEventFactory,
+      retryingEventFactory,
+      replyingEventFactory,
       loggingSettings.logger,
     )
 
@@ -117,8 +120,10 @@ export class AmforyClientBuilder {
       inquirySettings.headers,
       inquirySettings.rejectionDelay,
       inquirySettings.attemptRejectionDelay,
+      inquiringEventChannel,
+      replyingEventChannel,
+      retryingEventChannel,
       pluginBuilders,
-      eventEmitter,
       arrayBufferInquiryPayloadFactory,
       blobInquiryPayloadFactory,
       formDataInquiryPayloadFactory,
@@ -134,9 +139,11 @@ export class AmforyClientBuilder {
     )
 
     return new BasicAmforyClient(
+      inquiringEventChannel,
+      replyingEventChannel,
+      retryingEventChannel,
       pluginBuilders,
       inquiryBuilderFactory,
-      eventEmitter,
     )
   }
 

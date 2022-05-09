@@ -1,19 +1,19 @@
 import type { Reply, ReplyStatus } from '../../reply'
 
-export class BasicReply<TData = unknown> implements Reply<TData> {
+export class BasicReply<TResult = unknown> implements Reply<TResult> {
   public headers: Headers
 
   public status: ReplyStatus
 
   public statusText: string
 
-  public data: TData
+  public data: TResult
 
   public constructor(
     headers: Headers,
     status: ReplyStatus,
     statusText: string,
-    data: TData,
+    data: TResult,
   ) {
     this.headers = headers
     this.status = status

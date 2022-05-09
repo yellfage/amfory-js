@@ -1,16 +1,20 @@
-import type { EventEmitter } from '@yellfage/event-emitter'
-
-import type { EventHandlerMap } from '../../event-handler-map'
-
 import type { Inquiry, InquiryItems, InquiryShape } from '../../inquiry'
 
 import type { ReplyBodyReader } from '../../reply'
+
+import type {
+  InquiringEventChannel,
+  ReplyingEventChannel,
+  RetryingEventChannel,
+} from '../event'
 
 export interface InquiryFactory {
   create<TResult>(
     shape: InquiryShape,
     items: InquiryItems,
-    eventEmitter: EventEmitter<EventHandlerMap>,
+    inquiringEventChannel: InquiringEventChannel,
+    replyingEventChannel: ReplyingEventChannel,
+    retryingEventChannel: RetryingEventChannel,
     replyBodyReader: ReplyBodyReader<TResult>,
   ): Inquiry<TResult>
 }

@@ -5,12 +5,12 @@ import { BasicReply } from './basic-reply'
 import type { ReplyFactory } from './reply-factory'
 
 export class BasicReplyFactory implements ReplyFactory {
-  public create<TData>(
+  public create<TResult>(
     headers: Headers,
     status: ReplyStatus,
     statusText: string,
-    data: TData,
-  ): Reply<TData> {
+    data: TResult,
+  ): Reply<TResult> {
     return new BasicReply(headers, status, statusText, data)
   }
 }

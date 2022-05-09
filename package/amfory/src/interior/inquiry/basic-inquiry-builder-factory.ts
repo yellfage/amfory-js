@@ -1,10 +1,12 @@
-import type { EventEmitter } from '@yellfage/event-emitter'
-
-import type { EventHandlerMap } from '../../event-handler-map'
-
 import type { InquiryBuilder } from '../../inquiry'
 
 import type { PluginBuilder } from '../../plugin'
+
+import type {
+  InquiringEventChannel,
+  ReplyingEventChannel,
+  RetryingEventChannel,
+} from '../event'
 
 import type {
   ReplyBodyArrayBufferReader,
@@ -47,7 +49,11 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
 
   private readonly basePluginBuilders: PluginBuilder[]
 
-  private readonly baseEventEmitter: EventEmitter<EventHandlerMap>
+  private readonly baseInquiringEventChannel: InquiringEventChannel
+
+  private readonly baseReplyingEventChannel: ReplyingEventChannel
+
+  private readonly baseRetryingEventChannel: RetryingEventChannel
 
   private readonly arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory
 
@@ -78,8 +84,10 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     baseHeaders: Headers,
     baseRejectionDelay: number,
     baseAttemptRejectionDelay: number,
+    baseInquiringEventChannel: InquiringEventChannel,
+    baseReplyingEventChannel: ReplyingEventChannel,
+    baseRetryingEventChannel: RetryingEventChannel,
     basePluginBuilders: PluginBuilder[],
-    baseEventEmitter: EventEmitter<EventHandlerMap>,
     arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory,
     blobPayloadFactory: BlobInquiryPayloadFactory,
     formDataPayloadFactory: FormDataInquiryPayloadFactory,
@@ -97,8 +105,10 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     this.baseHeaders = baseHeaders
     this.baseRejectionDelay = baseRejectionDelay
     this.baseAttemptRejectionDelay = baseAttemptRejectionDelay
+    this.baseInquiringEventChannel = baseInquiringEventChannel
+    this.baseReplyingEventChannel = baseReplyingEventChannel
+    this.baseRetryingEventChannel = baseRetryingEventChannel
     this.basePluginBuilders = basePluginBuilders
-    this.baseEventEmitter = baseEventEmitter
     this.arrayBufferPayloadFactory = arrayBufferPayloadFactory
     this.blobPayloadFactory = blobPayloadFactory
     this.formDataPayloadFactory = formDataPayloadFactory
@@ -123,8 +133,10 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
       this.baseAttemptRejectionDelay,
       new AbortController(),
       new BasicInquiryItems(),
+      this.baseInquiringEventChannel.clone(),
+      this.baseReplyingEventChannel.clone(),
+      this.baseRetryingEventChannel.clone(),
       [...this.basePluginBuilders],
-      this.baseEventEmitter.clone(),
       this.arrayBufferPayloadFactory,
       this.blobPayloadFactory,
       this.formDataPayloadFactory,

@@ -1,10 +1,10 @@
 import type { Reply, ReplyStatus } from '../../reply'
 
 export interface ReplyFactory {
-  create<TData>(
+  create<TResult>(
     headers: Headers,
     status: ReplyStatus,
     statusText: string,
-    data: TData,
-  ): Reply<TData>
+    data: TResult,
+  ): Reply<TResult>
 }

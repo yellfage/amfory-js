@@ -1,5 +1,3 @@
-import type { EventHandlerMap } from '../event-handler-map'
-
 import type { PluginBuilder } from '../plugin'
 
 import type { Reply, ReplyBodyReader } from '../reply'
@@ -11,14 +9,6 @@ import type { InquiryPayload } from './inquiry-payload'
 export interface InquiryBuilder {
   use(builder: PluginBuilder): this
 
-  on<TEventName extends keyof EventHandlerMap>(
-    eventName: TEventName,
-    handler: EventHandlerMap[TEventName],
-  ): this
-  off<TEventName extends keyof EventHandlerMap>(
-    eventName: TEventName,
-    handler: EventHandlerMap[TEventName],
-  ): this
   putParams(init: URLSearchParamsInit): this
   joinParams(init: URLSearchParamsInit): this
   putHeaders(init: HeadersInit): this

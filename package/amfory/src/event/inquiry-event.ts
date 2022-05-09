@@ -1,5 +1,5 @@
 import type { Inquiry } from '../inquiry'
 
-export interface InquiryEvent {
-  readonly inquiry: Inquiry
+export interface InquiryEvent<TResult = unknown> {
+  readonly target: Inquiry<TResult>
 }

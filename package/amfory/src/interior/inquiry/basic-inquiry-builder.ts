@@ -1,7 +1,3 @@
-import type { EventEmitter } from '@yellfage/event-emitter'
-
-import type { EventHandlerMap } from '../../event-handler-map'
-
 import type {
   InquiryBuilder,
   InquiryItems,
@@ -13,6 +9,12 @@ import type { PluginBuilder } from '../../plugin'
 import type { Reply, ReplyBodyReader } from '../../reply'
 
 import type { URLSearchParamsInit } from '../../url-search-params-init'
+
+import type {
+  InquiringEventChannel,
+  ReplyingEventChannel,
+  RetryingEventChannel,
+} from '../event'
 
 import type {
   ReplyBodyArrayBufferReader,
@@ -53,9 +55,13 @@ export class BasicInquiryBuilder implements InquiryBuilder {
 
   private readonly items: InquiryItems
 
-  private readonly pluginBuilders: PluginBuilder[]
+  private readonly inquiringEventChannel: InquiringEventChannel
 
-  private readonly eventEmitter: EventEmitter<EventHandlerMap>
+  private readonly replyingEventChannel: ReplyingEventChannel
+
+  private readonly retryingEventChannel: RetryingEventChannel
+
+  private readonly pluginBuilders: PluginBuilder[]
 
   private readonly arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory
 
@@ -90,8 +96,10 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     attemptRejectionDelay: number,
     abortController: AbortController,
     items: InquiryItems,
+    inquiringEventChannel: InquiringEventChannel,
+    replyingEventChannel: ReplyingEventChannel,
+    retryingEventChannel: RetryingEventChannel,
     pluginBuilders: PluginBuilder[],
-    eventEmitter: EventEmitter<EventHandlerMap>,
     arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory,
     blobPayloadFactory: BlobInquiryPayloadFactory,
     formDataPayloadFactory: FormDataInquiryPayloadFactory,
@@ -113,8 +121,10 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     this.attemptRejectionDelay = attemptRejectionDelay
     this.abortController = abortController
     this.items = items
+    this.inquiringEventChannel = inquiringEventChannel
+    this.replyingEventChannel = replyingEventChannel
+    this.retryingEventChannel = retryingEventChannel
     this.pluginBuilders = pluginBuilders
-    this.eventEmitter = eventEmitter
     this.arrayBufferPayloadFactory = arrayBufferPayloadFactory
     this.blobPayloadFactory = blobPayloadFactory
     this.formDataPayloadFactory = formDataPayloadFactory
@@ -131,24 +141,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
 
   public use(builder: PluginBuilder): this {
     this.pluginBuilders.push(builder)
-
-    return this
-  }
-
-  public on<TEventName extends keyof EventHandlerMap>(
-    eventName: TEventName,
-    handler: EventHandlerMap[TEventName],
-  ): this {
-    this.eventEmitter.on(eventName, handler)
-
-    return this
-  }
-
-  public off<TEventName extends keyof EventHandlerMap>(
-    eventName: TEventName,
-    handler: EventHandlerMap[TEventName],
-  ): this {
-    this.eventEmitter.off(eventName, handler)
 
     return this
   }
@@ -261,7 +253,9 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     const inquiry = this.factory.create(
       shape,
       this.items,
-      this.eventEmitter,
+      this.inquiringEventChannel,
+      this.replyingEventChannel,
+      this.retryingEventChannel,
       replyBodyReader,
     )
 

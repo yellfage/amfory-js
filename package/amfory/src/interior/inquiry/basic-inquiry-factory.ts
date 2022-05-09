@@ -1,7 +1,3 @@
-import type { EventEmitter } from '@yellfage/event-emitter'
-
-import type { EventHandlerMap } from '../../event-handler-map'
-
 import type { InquiryShape, Inquiry, InquiryItems } from '../../inquiry'
 
 import type { Logger } from '../../logging'
@@ -11,14 +7,15 @@ import type { ReplyBodyReader } from '../../reply'
 import type { RetryControl, RetryDelayScheme } from '../../retry'
 
 import type {
-  InquiryEventFactory,
-  ReplyEventFactory,
-  RetryEventFactory,
+  InquiringEventChannel,
+  InquiringEventFactory,
+  ReplyingEventChannel,
+  ReplyingEventFactory,
+  RetryingEventChannel,
+  RetryingEventFactory,
 } from '../event'
 
 import type { ReplyFactory } from '../reply'
-
-import type { RetryContextFactory } from '../retry'
 
 import { BasicInquiry } from './basic-inquiry'
 
@@ -31,13 +28,11 @@ export class BasicInquiryFactory implements InquiryFactory {
 
   private readonly retryDelayScheme: RetryDelayScheme
 
-  private readonly inquiryEventFactory: InquiryEventFactory
+  private readonly inquiringEventFactory: InquiringEventFactory
 
-  private readonly retryEventFactory: RetryEventFactory
+  private readonly retryingEventFactory: RetryingEventFactory
 
-  private readonly retryContextFactory: RetryContextFactory
-
-  private readonly replyEventFactory: ReplyEventFactory
+  private readonly replyingEventFactory: ReplyingEventFactory
 
   private readonly logger: Logger
 
@@ -45,40 +40,41 @@ export class BasicInquiryFactory implements InquiryFactory {
     replyFactory: ReplyFactory,
     retryControl: RetryControl,
     retryDelayScheme: RetryDelayScheme,
-    inquiryEventFactory: InquiryEventFactory,
-    retryEventFactory: RetryEventFactory,
-    retryContextFactory: RetryContextFactory,
-    replyEventFactory: ReplyEventFactory,
+    inquiringEventFactory: InquiringEventFactory,
+    retryingEventFactory: RetryingEventFactory,
+    replyingEventFactory: ReplyingEventFactory,
     logger: Logger,
   ) {
     this.replyFactory = replyFactory
     this.retryControl = retryControl
     this.retryDelayScheme = retryDelayScheme
-    this.inquiryEventFactory = inquiryEventFactory
-    this.retryEventFactory = retryEventFactory
-    this.retryContextFactory = retryContextFactory
-    this.replyEventFactory = replyEventFactory
+    this.inquiringEventFactory = inquiringEventFactory
+    this.retryingEventFactory = retryingEventFactory
+    this.replyingEventFactory = replyingEventFactory
     this.logger = logger
   }
 
   public create<TResult>(
     shape: InquiryShape,
     items: InquiryItems,
-    eventEmitter: EventEmitter<EventHandlerMap>,
+    inquiringEventChannel: InquiringEventChannel,
+    replyingEventChannel: ReplyingEventChannel,
+    retryingEventChannel: RetryingEventChannel,
     replyBodyReader: ReplyBodyReader<TResult>,
   ): Inquiry<TResult> {
     return new BasicInquiry(
       shape,
       items,
-      eventEmitter,
+      inquiringEventChannel,
+      replyingEventChannel,
+      retryingEventChannel,
       replyBodyReader,
       this.replyFactory,
       this.retryControl,
       this.retryDelayScheme,
-      this.inquiryEventFactory,
-      this.retryEventFactory,
-      this.retryContextFactory,
-      this.replyEventFactory,
+      this.inquiringEventFactory,
+      this.replyingEventFactory,
+      this.retryingEventFactory,
       this.logger,
     )
   }
