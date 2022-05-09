@@ -36,7 +36,7 @@ import {
 } from './interior'
 
 export class AmforyClientBuilder {
-  private readonly url: URL
+  private readonly url: string | URL
 
   private readonly loggingSettingsBuilder: LoggingSettingsBuilder
 
@@ -53,7 +53,7 @@ export class AmforyClientBuilder {
     loggingSettingsBuilder: LoggingSettingsBuilder = new BasicLoggingSettingsBuilder(),
     inquirySettingsBuilder: InquirySettingsBuilder = new BasicInquirySettingsBuilder(),
   ) {
-    this.url = new URL(url)
+    this.url = url
     this.loggingSettingsBuilder = loggingSettingsBuilder
     this.inquirySettingsBuilder = inquirySettingsBuilder
   }
@@ -77,6 +77,8 @@ export class AmforyClientBuilder {
   public build(): AmforyClient {
     const loggingSettings = this.loggingSettingsBuilder.build()
     const inquirySettings = this.inquirySettingsBuilder.build()
+
+    const url = new URL(this.url)
 
     const formDataInquiryPayloadFactory = new FormDataInquiryPayloadFactory()
     const arrayBufferInquiryPayloadFactory =
@@ -111,7 +113,7 @@ export class AmforyClientBuilder {
     )
 
     const inquiryBuilderFactory = new BasicInquiryBuilderFactory(
-      this.url,
+      url,
       inquirySettings.rejectionDelay,
       inquirySettings.attemptRejectionDelay,
       inquiringEventChannel,
