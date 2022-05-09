@@ -20,8 +20,4 @@ export class BasicLoggerBuilder implements LoggerBuilder {
   public build(): BasicLogger {
     return new BasicLogger(this.level)
   }
-
-  public clone(): LoggerBuilder {
-    return new BasicLoggerBuilder(this.level)
-  }
 }

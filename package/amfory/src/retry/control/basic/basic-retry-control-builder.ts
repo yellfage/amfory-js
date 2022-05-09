@@ -42,8 +42,4 @@ export class BasicRetryControlBuilder implements RetryControlBuilder {
   public build(): RetryControl {
     return new BasicRetryControl(this.statuses)
   }
-
-  public clone(): RetryControlBuilder {
-    return new BasicRetryControlBuilder(this.statuses.slice())
-  }
 }

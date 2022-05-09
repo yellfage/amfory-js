@@ -80,8 +80,8 @@ export class BasicInquirySettingsBuilder implements InquirySettingsBuilder {
     return new BasicInquirySettingsBuilder(
       this.rejectionDelay,
       this.attemptRejectionDelay,
-      this.retryControlBuilder.clone(),
-      this.retryDelaySchemeBuilder.clone(),
+      this.retryControlBuilder,
+      this.retryDelaySchemeBuilder,
     )
   }
 }
