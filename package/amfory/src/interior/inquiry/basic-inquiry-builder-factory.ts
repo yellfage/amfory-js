@@ -1,7 +1,5 @@
 import type { InquiryBuilder } from '../../inquiry'
 
-import type { PluginBuilder } from '../../plugin'
-
 import type {
   InquiringEventChannel,
   ReplyingEventChannel,
@@ -47,8 +45,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
 
   private readonly baseAttemptRejectionDelay: number
 
-  private readonly basePluginBuilders: PluginBuilder[]
-
   private readonly baseInquiringEventChannel: InquiringEventChannel
 
   private readonly baseReplyingEventChannel: ReplyingEventChannel
@@ -87,7 +83,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     baseInquiringEventChannel: InquiringEventChannel,
     baseReplyingEventChannel: ReplyingEventChannel,
     baseRetryingEventChannel: RetryingEventChannel,
-    basePluginBuilders: PluginBuilder[],
     arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory,
     blobPayloadFactory: BlobInquiryPayloadFactory,
     formDataPayloadFactory: FormDataInquiryPayloadFactory,
@@ -108,7 +103,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     this.baseInquiringEventChannel = baseInquiringEventChannel
     this.baseReplyingEventChannel = baseReplyingEventChannel
     this.baseRetryingEventChannel = baseRetryingEventChannel
-    this.basePluginBuilders = basePluginBuilders
     this.arrayBufferPayloadFactory = arrayBufferPayloadFactory
     this.blobPayloadFactory = blobPayloadFactory
     this.formDataPayloadFactory = formDataPayloadFactory
@@ -136,7 +130,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
       this.baseInquiringEventChannel.clone(),
       this.baseReplyingEventChannel.clone(),
       this.baseRetryingEventChannel.clone(),
-      [...this.basePluginBuilders],
       this.arrayBufferPayloadFactory,
       this.blobPayloadFactory,
       this.formDataPayloadFactory,

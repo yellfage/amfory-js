@@ -79,8 +79,6 @@ export class AmforyClientBuilder {
     const loggingSettings = this.loggingSettingsBuilder.build()
     const inquirySettings = this.inquirySettingsBuilder.build()
 
-    const pluginBuilders = []
-
     const formDataInquiryPayloadFactory = new FormDataInquiryPayloadFactory()
     const arrayBufferInquiryPayloadFactory =
       new ArrayBufferInquiryPayloadFactory()
@@ -123,7 +121,6 @@ export class AmforyClientBuilder {
       inquiringEventChannel,
       replyingEventChannel,
       retryingEventChannel,
-      pluginBuilders,
       arrayBufferInquiryPayloadFactory,
       blobInquiryPayloadFactory,
       formDataInquiryPayloadFactory,
@@ -142,7 +139,6 @@ export class AmforyClientBuilder {
       inquiringEventChannel,
       replyingEventChannel,
       retryingEventChannel,
-      pluginBuilders,
       inquiryBuilderFactory,
     )
   }

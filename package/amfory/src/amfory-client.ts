@@ -6,14 +6,14 @@ import type {
 
 import type { InquiryBuilder } from './inquiry'
 
-import type { PluginBuilder } from './plugin'
+import type { ClientPluginBuilder } from './plugin'
 
 export interface AmforyClient {
   readonly inquiring: InquiringEventPool
   readonly replying: ReplyingEventPool
   readonly retrying: RetryingEventPool
 
-  use(builder: PluginBuilder): this
+  use(builder: ClientPluginBuilder): this
 
   get(path: string): InquiryBuilder
   head(path: string): InquiryBuilder

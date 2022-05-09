@@ -1,4 +1,4 @@
-import type { PluginBuilder } from '../plugin'
+import type { InquiryPluginBuilder } from '../plugin'
 
 import type { Reply, ReplyBodyReader } from '../reply'
 
@@ -7,7 +7,7 @@ import type { URLSearchParamsInit } from '../url-search-params-init'
 import type { InquiryPayload } from './inquiry-payload'
 
 export interface InquiryBuilder {
-  use(builder: PluginBuilder): this
+  use(builder: InquiryPluginBuilder): this
 
   putParams(init: URLSearchParamsInit): this
   joinParams(init: URLSearchParamsInit): this

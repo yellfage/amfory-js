@@ -2,7 +2,7 @@ import type { AmforyClient } from '../amfory-client'
 
 import type { InquiryBuilder } from '../inquiry'
 
-import type { PluginBuilder } from '../plugin'
+import type { ClientPluginBuilder } from '../plugin'
 
 import type {
   InquiringEventChannel,
@@ -19,26 +19,22 @@ export class BasicAmforyClient implements AmforyClient {
 
   public readonly retrying: RetryingEventChannel
 
-  private readonly pluginBuilders: PluginBuilder[]
-
   private readonly inquiryBuilderFactory: InquiryBuilderFactory
 
   public constructor(
     inquiringEventChannel: InquiringEventChannel,
     replyingEventChannel: ReplyingEventChannel,
     retryingEventChannel: RetryingEventChannel,
-    pluginBuilders: PluginBuilder[],
     inquiryBuilderFactory: InquiryBuilderFactory,
   ) {
     this.inquiring = inquiringEventChannel
     this.replying = replyingEventChannel
     this.retrying = retryingEventChannel
-    this.pluginBuilders = pluginBuilders
     this.inquiryBuilderFactory = inquiryBuilderFactory
   }
 
-  public use(builder: PluginBuilder): this {
-    this.pluginBuilders.push(builder)
+  public use(builder: ClientPluginBuilder): this {
+    builder.build().initialize(this)
 
     return this
   }

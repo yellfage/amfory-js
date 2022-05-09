@@ -4,7 +4,7 @@ import type {
   InquiryPayload,
 } from '../../inquiry'
 
-import type { PluginBuilder } from '../../plugin'
+import type { InquiryPluginBuilder } from '../../plugin'
 
 import type { Reply, ReplyBodyReader } from '../../reply'
 
@@ -61,8 +61,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
 
   private readonly retryingEventChannel: RetryingEventChannel
 
-  private readonly pluginBuilders: PluginBuilder[]
-
   private readonly arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory
 
   private readonly blobPayloadFactory: BlobInquiryPayloadFactory
@@ -87,6 +85,8 @@ export class BasicInquiryBuilder implements InquiryBuilder {
 
   private readonly factory: InquiryFactory
 
+  private readonly pluginBuilders: InquiryPluginBuilder[] = []
+
   public constructor(
     method: string,
     url: URL,
@@ -99,7 +99,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     inquiringEventChannel: InquiringEventChannel,
     replyingEventChannel: ReplyingEventChannel,
     retryingEventChannel: RetryingEventChannel,
-    pluginBuilders: PluginBuilder[],
     arrayBufferPayloadFactory: ArrayBufferInquiryPayloadFactory,
     blobPayloadFactory: BlobInquiryPayloadFactory,
     formDataPayloadFactory: FormDataInquiryPayloadFactory,
@@ -124,7 +123,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     this.inquiringEventChannel = inquiringEventChannel
     this.replyingEventChannel = replyingEventChannel
     this.retryingEventChannel = retryingEventChannel
-    this.pluginBuilders = pluginBuilders
     this.arrayBufferPayloadFactory = arrayBufferPayloadFactory
     this.blobPayloadFactory = blobPayloadFactory
     this.formDataPayloadFactory = formDataPayloadFactory
@@ -139,7 +137,7 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     this.factory = factory
   }
 
-  public use(builder: PluginBuilder): this {
+  public use(builder: InquiryPluginBuilder): this {
     this.pluginBuilders.push(builder)
 
     return this
@@ -259,13 +257,11 @@ export class BasicInquiryBuilder implements InquiryBuilder {
       replyBodyReader,
     )
 
-    const plugins = this.pluginBuilders.map((builder) => builder.build(inquiry))
-
-    await Promise.all(plugins.map((plugin) => plugin.initialize()))
+    this.pluginBuilders
+      .map((builder) => builder.build())
+      .forEach((plugin) => plugin.initialize(inquiry))
 
     const reply = await inquiry.send()
-
-    await Promise.all(plugins.map((plugin) => plugin.terminate()))
 
     return reply
   }
