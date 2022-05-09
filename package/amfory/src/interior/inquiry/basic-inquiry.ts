@@ -112,7 +112,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
     this.logger = logger
   }
 
-  public async send(): Promise<Reply<TResult>> {
+  public async perform(): Promise<Reply<TResult>> {
     this.ensureAbortControllerValid()
 
     this.ensureSendingPossible()
@@ -139,7 +139,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
       return replyingEvent.reply
     } finally {
-      this.clearRejectionTimeout()
+      this.stopRejectionTimeout()
 
       this.retryDelayScheme.reset()
     }
@@ -183,7 +183,7 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
 
       throw error
     } finally {
-      this.clearAttemptRejectionTimeout()
+      this.stopAttemptRejectionTimeout()
     }
   }
 
@@ -237,11 +237,11 @@ export class BasicInquiry<TResult> implements Inquiry<TResult> {
     }, this.attemptRejectionDelay) as unknown as number
   }
 
-  private clearRejectionTimeout(): void {
+  private stopRejectionTimeout(): void {
     clearTimeout(this.rejectionTimeoutId)
   }
 
-  private clearAttemptRejectionTimeout(): void {
+  private stopAttemptRejectionTimeout(): void {
     clearTimeout(this.attemptRejectionTimeoutId)
   }
 

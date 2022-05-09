@@ -19,6 +19,6 @@ export class BasicReplyingEvent<TResult>
   }
 
   public async resend(): Promise<void> {
-    this.reply = await this.target.send()
+    this.reply = await this.target.perform()
   }
 }

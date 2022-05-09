@@ -247,8 +247,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
       .map((builder) => builder.build())
       .forEach((plugin) => plugin.initialize(inquiry))
 
-    const reply = await inquiry.send()
-
-    return reply
+    return inquiry.perform()
   }
 }

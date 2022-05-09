@@ -23,5 +23,5 @@ export interface Inquiry<TResult = unknown> {
   readonly replying: ReplyingEventPool
   readonly retrying: RetryingEventPool
 
-  send(): Promise<Reply<TResult>>
+  perform(): Promise<Reply<TResult>>
 }
