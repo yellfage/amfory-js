@@ -3,10 +3,10 @@ import type { ReplyStatus } from '../../../reply'
 import type { RetryControl } from '../retry-control'
 
 export class BasicRetryControl implements RetryControl {
-  private readonly retryableStatuses: ReplyStatus[]
+  private readonly statuses: ReplyStatus[]
 
-  public constructor(retryableStatuses: ReplyStatus[]) {
-    this.retryableStatuses = retryableStatuses
+  public constructor(statuses: ReplyStatus[]) {
+    this.statuses = statuses
   }
 
   public confirmError(): boolean {
@@ -14,6 +14,6 @@ export class BasicRetryControl implements RetryControl {
   }
 
   public confirmStatus(status: ReplyStatus): boolean {
-    return this.retryableStatuses.includes(status)
+    return this.statuses.includes(status)
   }
 }

@@ -41,10 +41,6 @@ export class BasicInquiryBuilder implements InquiryBuilder {
 
   private payload: Payload
 
-  private rejectionDelay: number
-
-  private attemptRejectionDelay: number
-
   private abortController: AbortController
 
   private readonly items: InquiryItems
@@ -54,6 +50,10 @@ export class BasicInquiryBuilder implements InquiryBuilder {
   private readonly replyingEventChannel: ReplyingEventChannel
 
   private readonly retryingEventChannel: RetryingEventChannel
+
+  private rejectionDelay: number
+
+  private attemptRejectionDelay: number
 
   private readonly arrayBufferPayloadFactory: ArrayBufferPayloadFactory
 
@@ -84,13 +84,13 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     url: URL,
     headers: Headers,
     payload: Payload,
-    rejectionDelay: number,
-    attemptRejectionDelay: number,
     abortController: AbortController,
     items: InquiryItems,
     inquiringEventChannel: InquiringEventChannel,
     replyingEventChannel: ReplyingEventChannel,
     retryingEventChannel: RetryingEventChannel,
+    rejectionDelay: number,
+    attemptRejectionDelay: number,
     arrayBufferPayloadFactory: ArrayBufferPayloadFactory,
     blobPayloadFactory: BlobPayloadFactory,
     formDataPayloadFactory: FormDataPayloadFactory,
@@ -107,13 +107,13 @@ export class BasicInquiryBuilder implements InquiryBuilder {
     this.url = url
     this.headers = headers
     this.payload = payload
-    this.rejectionDelay = rejectionDelay
-    this.attemptRejectionDelay = attemptRejectionDelay
     this.abortController = abortController
     this.items = items
     this.inquiringEventChannel = inquiringEventChannel
     this.replyingEventChannel = replyingEventChannel
     this.retryingEventChannel = retryingEventChannel
+    this.rejectionDelay = rejectionDelay
+    this.attemptRejectionDelay = attemptRejectionDelay
     this.arrayBufferPayloadFactory = arrayBufferPayloadFactory
     this.blobPayloadFactory = blobPayloadFactory
     this.formDataPayloadFactory = formDataPayloadFactory

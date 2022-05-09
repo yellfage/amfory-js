@@ -33,17 +33,17 @@ import type { InquiryBuilderFactory } from './inquiry-builder-factory'
 import type { InquiryFactory } from './inquiry-factory'
 
 export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
-  private readonly baseUrl: URL
+  private readonly url: URL
 
-  private readonly baseRejectionDelay: number
+  private readonly inquiringEventChannel: InquiringEventChannel
 
-  private readonly baseAttemptRejectionDelay: number
+  private readonly replyingEventChannel: ReplyingEventChannel
 
-  private readonly baseInquiringEventChannel: InquiringEventChannel
+  private readonly retryingEventChannel: RetryingEventChannel
 
-  private readonly baseReplyingEventChannel: ReplyingEventChannel
+  private readonly rejectionDelay: number
 
-  private readonly baseRetryingEventChannel: RetryingEventChannel
+  private readonly attemptRejectionDelay: number
 
   private readonly arrayBufferPayloadFactory: ArrayBufferPayloadFactory
 
@@ -65,15 +65,15 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
 
   private readonly replyBodyTextReader: ReplyBodyTextReader
 
-  private readonly factory: InquiryFactory
+  private readonly inquiryFactory: InquiryFactory
 
   public constructor(
-    baseUrl: URL,
-    baseRejectionDelay: number,
-    baseAttemptRejectionDelay: number,
-    baseInquiringEventChannel: InquiringEventChannel,
-    baseReplyingEventChannel: ReplyingEventChannel,
-    baseRetryingEventChannel: RetryingEventChannel,
+    url: URL,
+    inquiringEventChannel: InquiringEventChannel,
+    replyingEventChannel: ReplyingEventChannel,
+    retryingEventChannel: RetryingEventChannel,
+    rejectionDelay: number,
+    attemptRejectionDelay: number,
     arrayBufferPayloadFactory: ArrayBufferPayloadFactory,
     blobPayloadFactory: BlobPayloadFactory,
     formDataPayloadFactory: FormDataPayloadFactory,
@@ -84,14 +84,14 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     replyBodyFormDataReader: ReplyBodyFormDataReader,
     replyBodyJsonReader: ReplyBodyJsonReader,
     replyBodyTextReader: ReplyBodyTextReader,
-    factory: InquiryFactory,
+    inquiryFactory: InquiryFactory,
   ) {
-    this.baseUrl = baseUrl
-    this.baseRejectionDelay = baseRejectionDelay
-    this.baseAttemptRejectionDelay = baseAttemptRejectionDelay
-    this.baseInquiringEventChannel = baseInquiringEventChannel
-    this.baseReplyingEventChannel = baseReplyingEventChannel
-    this.baseRetryingEventChannel = baseRetryingEventChannel
+    this.url = url
+    this.inquiringEventChannel = inquiringEventChannel
+    this.replyingEventChannel = replyingEventChannel
+    this.retryingEventChannel = retryingEventChannel
+    this.rejectionDelay = rejectionDelay
+    this.attemptRejectionDelay = attemptRejectionDelay
     this.arrayBufferPayloadFactory = arrayBufferPayloadFactory
     this.blobPayloadFactory = blobPayloadFactory
     this.formDataPayloadFactory = formDataPayloadFactory
@@ -102,22 +102,22 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     this.replyBodyFormDataReader = replyBodyFormDataReader
     this.replyBodyJsonReader = replyBodyJsonReader
     this.replyBodyTextReader = replyBodyTextReader
-    this.factory = factory
+    this.inquiryFactory = inquiryFactory
   }
 
   public create(method: string, path: string): InquiryBuilder {
     return new BasicInquiryBuilder(
       method,
-      new URL(path, this.baseUrl),
+      new URL(path, this.url),
       new Headers(),
       new EmptyPayload(),
-      this.baseRejectionDelay,
-      this.baseAttemptRejectionDelay,
       new AbortController(),
       new BasicInquiryItems(),
-      this.baseInquiringEventChannel.clone(),
-      this.baseReplyingEventChannel.clone(),
-      this.baseRetryingEventChannel.clone(),
+      this.inquiringEventChannel.clone(),
+      this.replyingEventChannel.clone(),
+      this.retryingEventChannel.clone(),
+      this.rejectionDelay,
+      this.attemptRejectionDelay,
       this.arrayBufferPayloadFactory,
       this.blobPayloadFactory,
       this.formDataPayloadFactory,
@@ -128,7 +128,7 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
       this.replyBodyFormDataReader,
       this.replyBodyJsonReader,
       this.replyBodyTextReader,
-      this.factory,
+      this.inquiryFactory,
     )
   }
 }
