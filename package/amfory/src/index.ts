@@ -13,7 +13,6 @@ export * from './reply'
 export * from './retry'
 
 export * from './abort-error'
-export * from './event-handler-map'
 export * from './amfory-client'
 export * from './amfory-client-builder'
 export * from './url-search-params-init'

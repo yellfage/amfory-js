@@ -4,7 +4,7 @@ import type { Reply, ReplyBodyReader } from '../reply'
 
 import type { URLSearchParamsInit } from '../url-search-params-init'
 
-import type { InquiryPayload } from './inquiry-payload'
+import type { InquiryPayload } from './payload'
 
 export interface InquiryBuilder {
   use(builder: InquiryPluginBuilder): this

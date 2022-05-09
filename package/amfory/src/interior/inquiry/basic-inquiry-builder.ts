@@ -24,19 +24,17 @@ import type {
   ReplyBodyTextReader,
 } from '../reply'
 
-import type { ArrayBufferInquiryPayloadFactory } from './array-buffer-inquiry-payload-factory'
-
-import type { BlobInquiryPayloadFactory } from './blob-inquiry-payload-factory'
-
-import type { FormDataInquiryPayloadFactory } from './form-data-inquiry-payload-factory'
-
 import type { InquiryFactory } from './inquiry-factory'
 
-import type { InquiryShapeFactory } from './inquiry-shape-factory'
+import type {
+  ArrayBufferInquiryPayloadFactory,
+  BlobInquiryPayloadFactory,
+  FormDataInquiryPayloadFactory,
+  JsonInquiryPayloadFactory,
+  TextInquiryPayloadFactory,
+} from './payload'
 
-import type { JsonInquiryPayloadFactory } from './json-inquiry-payload-factory'
-
-import type { TextInquiryPayloadFactory } from './text-inquiry-payload-factory'
+import type { InquiryShapeFactory } from './shape'
 
 export class BasicInquiryBuilder implements InquiryBuilder {
   private readonly method: string
