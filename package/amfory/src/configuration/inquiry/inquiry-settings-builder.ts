@@ -5,8 +5,8 @@ import type { InquirySettings } from './inquiry-settings'
 export interface InquirySettingsBuilder {
   setRejectionDelay(delay: number): this
   setAttemptRejectionDelay(delay: number): this
-  setRetryControlBuilder(builder: RetryControlBuilder): this
-  setRetryDelaySchemeBuilder(builder: RetryDelaySchemeBuilder): this
+  setRetryControl(builder: RetryControlBuilder): this
+  setRetryDelayScheme(builder: RetryDelaySchemeBuilder): this
   build(): InquirySettings
   clone(): InquirySettingsBuilder
 }

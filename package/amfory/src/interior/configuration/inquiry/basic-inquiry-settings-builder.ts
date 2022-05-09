@@ -55,13 +55,13 @@ export class BasicInquirySettingsBuilder implements InquirySettingsBuilder {
     return this
   }
 
-  public setRetryControlBuilder(builder: RetryControlBuilder): this {
+  public setRetryControl(builder: RetryControlBuilder): this {
     this.retryControlBuilder = builder
 
     return this
   }
 
-  public setRetryDelaySchemeBuilder(builder: RetryDelaySchemeBuilder): this {
+  public setRetryDelayScheme(builder: RetryDelaySchemeBuilder): this {
     this.retryDelaySchemeBuilder = builder
 
     return this
