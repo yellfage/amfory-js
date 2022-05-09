@@ -16,8 +16,6 @@ import {
 import { BasicInquirySettings } from './basic-inquiry-settings'
 
 export class BasicInquirySettingsBuilder implements InquirySettingsBuilder {
-  private readonly headers: Headers
-
   private rejectionDelay: number
 
   private attemptRejectionDelay: number
@@ -28,36 +26,21 @@ export class BasicInquirySettingsBuilder implements InquirySettingsBuilder {
 
   public constructor()
   public constructor(
-    headers: Headers,
     rejectionDelay: number,
     attemptRejectionDelay: number,
     retryControlBuilder: RetryControlBuilder,
     retryDelaySchemeBuilder: RetryDelaySchemeBuilder,
   )
   public constructor(
-    headers = new Headers(),
     rejectionDelay = 90000,
     attemptRejectionDelay = 15000,
     retryControlBuilder: RetryControlBuilder = new BasicRetryControlBuilder(),
     retryDelaySchemeBuilder: RetryDelaySchemeBuilder = new BasicRetryDelaySchemeBuilder(),
   ) {
-    this.headers = headers
     this.rejectionDelay = rejectionDelay
     this.attemptRejectionDelay = attemptRejectionDelay
     this.retryControlBuilder = retryControlBuilder
     this.retryDelaySchemeBuilder = retryDelaySchemeBuilder
-  }
-
-  public putHeaders(init: HeadersInit): this {
-    new Headers(init).forEach((value, key) => this.headers.set(key, value))
-
-    return this
-  }
-
-  public joinHeaders(init: HeadersInit): this {
-    new Headers(init).forEach((value, key) => this.headers.append(key, value))
-
-    return this
   }
 
   public setRejectionDelay(delay: number): this {
@@ -86,7 +69,6 @@ export class BasicInquirySettingsBuilder implements InquirySettingsBuilder {
 
   public build(): InquirySettings {
     return new BasicInquirySettings(
-      this.headers,
       this.rejectionDelay,
       this.attemptRejectionDelay,
       this.retryControlBuilder.build(),
@@ -96,7 +78,6 @@ export class BasicInquirySettingsBuilder implements InquirySettingsBuilder {
 
   public clone(): InquirySettingsBuilder {
     return new BasicInquirySettingsBuilder(
-      new Headers(this.headers),
       this.rejectionDelay,
       this.attemptRejectionDelay,
       this.retryControlBuilder.clone(),

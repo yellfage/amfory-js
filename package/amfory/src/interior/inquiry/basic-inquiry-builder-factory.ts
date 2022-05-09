@@ -35,8 +35,6 @@ import { EmptyInquiryPayload } from './payload'
 export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
   private readonly baseUrl: URL
 
-  private readonly baseHeaders: Headers
-
   private readonly baseRejectionDelay: number
 
   private readonly baseAttemptRejectionDelay: number
@@ -71,7 +69,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
 
   public constructor(
     baseUrl: URL,
-    baseHeaders: Headers,
     baseRejectionDelay: number,
     baseAttemptRejectionDelay: number,
     baseInquiringEventChannel: InquiringEventChannel,
@@ -90,7 +87,6 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     factory: InquiryFactory,
   ) {
     this.baseUrl = baseUrl
-    this.baseHeaders = baseHeaders
     this.baseRejectionDelay = baseRejectionDelay
     this.baseAttemptRejectionDelay = baseAttemptRejectionDelay
     this.baseInquiringEventChannel = baseInquiringEventChannel
@@ -113,7 +109,7 @@ export class BasicInquiryBuilderFactory implements InquiryBuilderFactory {
     return new BasicInquiryBuilder(
       method,
       new URL(path, this.baseUrl),
-      new Headers(this.baseHeaders),
+      new Headers(),
       new EmptyInquiryPayload(),
       this.baseRejectionDelay,
       this.baseAttemptRejectionDelay,

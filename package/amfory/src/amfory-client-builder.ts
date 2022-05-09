@@ -112,7 +112,6 @@ export class AmforyClientBuilder {
 
     const inquiryBuilderFactory = new BasicInquiryBuilderFactory(
       this.url,
-      inquirySettings.headers,
       inquirySettings.rejectionDelay,
       inquirySettings.attemptRejectionDelay,
       inquiringEventChannel,
