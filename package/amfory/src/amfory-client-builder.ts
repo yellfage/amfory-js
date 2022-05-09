@@ -140,7 +140,7 @@ export class AmforyClientBuilder {
     )
   }
 
-  public clone(url: string | URL = this.url): AmforyClientBuilder {
+  public clone(url: string | URL): AmforyClientBuilder {
     return new AmforyClientBuilder(
       url,
       this.loggingSettingsBuilder.clone(),
