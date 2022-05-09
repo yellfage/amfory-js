@@ -35,6 +35,8 @@ import {
   BasicReplyingEventFactory,
 } from './interior'
 
+import type { ClientPluginBuilder } from './plugin'
+
 export class AmforyClientBuilder {
   private readonly url: string | URL
 
@@ -42,20 +44,31 @@ export class AmforyClientBuilder {
 
   private readonly inquirySettingsBuilder: InquirySettingsBuilder
 
+  private readonly pluginBuilders: ClientPluginBuilder[]
+
   public constructor(url: string | URL)
   public constructor(
     url: string | URL,
     loggingSettingsBuilder: LoggingSettingsBuilder,
     inquirySettingsBuilder: InquirySettingsBuilder,
+    pluginBuilders: ClientPluginBuilder[],
   )
   public constructor(
     url: string | URL,
     loggingSettingsBuilder: LoggingSettingsBuilder = new BasicLoggingSettingsBuilder(),
     inquirySettingsBuilder: InquirySettingsBuilder = new BasicInquirySettingsBuilder(),
+    pluginBuilders: ClientPluginBuilder[] = [],
   ) {
     this.url = url
     this.loggingSettingsBuilder = loggingSettingsBuilder
     this.inquirySettingsBuilder = inquirySettingsBuilder
+    this.pluginBuilders = pluginBuilders
+  }
+
+  public use(builder: ClientPluginBuilder): this {
+    this.pluginBuilders.push(builder)
+
+    return this
   }
 
   public configureLogging(
@@ -132,12 +145,16 @@ export class AmforyClientBuilder {
       inquiryFactory,
     )
 
-    return new BasicAmforyClient(
+    const client = new BasicAmforyClient(
       inquiringEventChannel,
       replyingEventChannel,
       retryingEventChannel,
       inquiryBuilderFactory,
     )
+
+    this.pluginBuilders.forEach((builder) => client.use(builder))
+
+    return client
   }
 
   public clone(url: string | URL): AmforyClientBuilder {
@@ -145,6 +162,7 @@ export class AmforyClientBuilder {
       url,
       this.loggingSettingsBuilder.clone(),
       this.inquirySettingsBuilder.clone(),
+      this.pluginBuilders.slice(),
     )
   }
 }
