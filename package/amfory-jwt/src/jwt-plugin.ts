@@ -9,12 +9,12 @@ import type { JwtPairStash } from './jwt-pair-stash'
 
 import type { JwtRefreshControl } from './jwt-refresh-control'
 
+const RESEND_COUNT_KEY = 'jwt-resend-count'
+
 export class JwtPlugin implements ClientPlugin {
   private readonly refreshControl: JwtRefreshControl
 
   private readonly pairStash: JwtPairStash
-
-  private resendCount = 0
 
   public constructor(
     refreshControl: JwtRefreshControl,
@@ -29,8 +29,13 @@ export class JwtPlugin implements ClientPlugin {
     client.replying.add(this.handleReplyingEvent)
   }
 
-  private readonly handleInquiringEvent = ({ target }: InquiryEvent): void => {
-    target.headers.set('authorization', `Bearer ${this.pairStash.pair.token}`)
+  private readonly handleInquiringEvent = (event: InquiryEvent): void => {
+    event.target.headers.set(
+      'authorization',
+      `Bearer ${this.pairStash.pair.token}`,
+    )
+
+    event.target.items.set<number>(RESEND_COUNT_KEY, 0)
   }
 
   private readonly handleReplyingEvent = async (
@@ -40,7 +45,9 @@ export class JwtPlugin implements ClientPlugin {
       return
     }
 
-    if (this.resendCount > 0) {
+    const resendCount = event.target.items.get<number>(RESEND_COUNT_KEY)
+
+    if (resendCount > 0) {
       return this.refreshControl.fail()
     }
 
@@ -54,7 +61,7 @@ export class JwtPlugin implements ClientPlugin {
       return this.refreshControl.fail()
     }
 
-    this.resendCount += 1
+    event.target.items.set(RESEND_COUNT_KEY, resendCount + 1)
 
     return event.resend()
   }
