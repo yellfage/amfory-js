@@ -8,24 +8,24 @@
   "devDependencies": {
     "@types/cors": "^2.8.12",
     "@types/jsonwebtoken": "^8.5.8",
-    "fork-ts-checker-webpack-plugin": "^7.0.0",
+    "fork-ts-checker-webpack-plugin": "^7.2.11",
     "html-webpack-plugin": "^5.5.0",
-    "nodemon-webpack-plugin": "^4.7.0",
+    "nodemon-webpack-plugin": "^4.7.1",
     "npm-run-all": "^4.1.5",
-    "ts-loader": "^9.2.6",
-    "typescript": "^4.5.5",
-    "webpack": "^5.67.0",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.6.4",
+    "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.7.3",
+    "webpack-dev-server": "^4.9.0",
     "webpack-merge": "^5.8.0",
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
-    "@yellfage/amfory": "^1.0.0-beta.3",
-    "@yellfage/amfory-jwt": "^1.0.0-beta.3",
-    "body-parser": "^1.19.1",
+    "@yellfage/amfory": "^1.0.0-beta.4",
+    "@yellfage/amfory-jwt": "^1.0.0-beta.4",
+    "body-parser": "^1.20.0",
     "cors": "^2.8.5",
-    "express": "^4.17.2",
+    "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1"
   }
 }
