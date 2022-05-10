@@ -32,9 +32,11 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader',
+            loader: 'esbuild-loader',
             options: {
-              transpileOnly: true,
+              loader: 'ts',
+              target: 'esnext',
+              tsconfigRaw: require(TS_CONFIG_PATH),
             },
           },
         ],
