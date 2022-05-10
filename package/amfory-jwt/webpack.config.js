@@ -29,9 +29,10 @@ module.exports = {
         include: [SRC_PATH],
         use: [
           {
-            loader: 'ts-loader',
+            loader: 'esbuild-loader',
             options: {
-              transpileOnly: true,
+              loader: 'ts',
+              target: 'esnext',
             },
           },
         ],
