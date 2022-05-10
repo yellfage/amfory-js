@@ -8,26 +8,25 @@ import {
   ReplyStatus,
 } from '@yellfage/amfory'
 
-import { GlobalPluginBuilder } from './global-plugin-builder'
+import { SampleClientPluginBuilder } from './sample-client-plugin-builder'
 
-import { LocalPluginBuilder } from './local-plugin-builder'
+import { SampleInquiryPluginBuilder } from './sample-inquiry-plugin-builder'
 
 const client = new AmforyClientBuilder('https://httpbin.org')
   .configureLogging((builder) =>
-    builder.setLoggerBuilder(new BasicLoggerBuilder().setLevel(LogLevel.Debug)),
+    builder.setLogger(new BasicLoggerBuilder().setLevel(LogLevel.Debug)),
   )
   .configureInquiry((builder) =>
     builder
-      .putHeaders({ 'x-custom-global-header': 'value' })
       .setRejectionDelay(90000)
       .setAttemptRejectionDelay(15000)
-      .setRetryControlBuilder(
-        new BasicRetryControlBuilder().setRetryableStatuses([
+      .setRetryControl(
+        new BasicRetryControlBuilder().setStatuses([
           ReplyStatus.NotFound,
           ReplyStatus.InternalServerError,
         ]),
       )
-      .setRetryDelaySchemeBuilder(
+      .setRetryDelayScheme(
         new BasicRetryDelaySchemeBuilder()
           .setMinDelayOffset(0)
           .setMaxDelayOffset(1000)
@@ -36,13 +35,17 @@ const client = new AmforyClientBuilder('https://httpbin.org')
   )
   .build()
 
-client.use(new GlobalPluginBuilder().setFoo('bar'))
+client.use(new SampleClientPluginBuilder())
 
-client.on('inquiry', (event) =>
-  console.log('Global inquiry event handler', event),
+client.inquiring.add((event) =>
+  console.log('Global inquiring event handler', event),
 )
-client.on('reply', (event) => console.log('Global reply event handler', event))
-client.on('retry', (event) => console.log('Global retry event handler', event))
+client.replying.add((event) =>
+  console.log('Global replying event handler', event),
+)
+client.retrying.add((event) =>
+  console.log('Global retrying event handler', event),
+)
 
 //
 ;(async () => {
@@ -59,11 +62,8 @@ client.on('retry', (event) => console.log('Global retry event handler', event))
 
   const postReply = await client
     .post('/post')
-    .use(new LocalPluginBuilder())
-    .putHeaders({ 'x-custom-local-header': 'value' })
-    .on('inquiry', (event) => console.log('Local inquiry event handler', event))
-    .on('reply', (event) => console.log('Local reply event handler', event))
-    .on('retry', (event) => console.log('Local retry event handler', event))
+    .use(new SampleInquiryPluginBuilder())
+    .putHeaders([['x-custom-local-header', 'value']])
     .setJsonPayload({
       first: 'first-value',
       second: 'second-value',

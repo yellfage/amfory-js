@@ -1,46 +1,40 @@
-import type { Inquiry, Plugin, ReplyEvent } from '@yellfage/amfory'
+import type {
+  AmforyClient,
+  ClientPlugin,
+  InquiryEvent,
+  ReplyingEvent,
+} from '@yellfage/amfory'
 
 import type { JwtPairStash } from './jwt-pair-stash'
 
 import type { JwtRefreshControl } from './jwt-refresh-control'
 
-export class JwtPlugin implements Plugin {
+export class JwtPlugin implements ClientPlugin {
   private readonly refreshControl: JwtRefreshControl
 
   private readonly pairStash: JwtPairStash
-
-  private readonly inquiry: Inquiry
 
   private resendCount = 0
 
   public constructor(
     refreshControl: JwtRefreshControl,
     pairStash: JwtPairStash,
-    inquiry: Inquiry,
   ) {
     this.refreshControl = refreshControl
     this.pairStash = pairStash
-    this.inquiry = inquiry
   }
 
-  public initialize(): void | Promise<void> {
-    this.inquiry.on('inquiry', this.handleInquiryEvent)
-    this.inquiry.on('reply', this.handleReplyEvent)
+  public initialize(client: AmforyClient): void | Promise<void> {
+    client.inquiring.add(this.handleInquiringEvent)
+    client.replying.add(this.handleReplyingEvent)
   }
 
-  public terminate(): void | Promise<void> {
-    //
+  private readonly handleInquiringEvent = ({ target }: InquiryEvent): void => {
+    target.headers.set('authorization', `Bearer ${this.pairStash.pair.token}`)
   }
 
-  private readonly handleInquiryEvent = (): void => {
-    this.inquiry.shape.headers.set(
-      'authorization',
-      `Bearer ${this.pairStash.pair.token}`,
-    )
-  }
-
-  private readonly handleReplyEvent = async (
-    event: ReplyEvent,
+  private readonly handleReplyingEvent = async (
+    event: ReplyingEvent,
   ): Promise<void> => {
     if (!this.refreshControl.confirm(event.reply)) {
       return

@@ -32,6 +32,6 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "@yellfage/amfory": "^1.0.0-beta.3"
+    "@yellfage/amfory": "^1.0.0-beta.4"
   }
 }
