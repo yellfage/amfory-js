@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@yellfage/amfory": "^1.0.0-beta.4",
-    "@yellfage/amfory-jwt": "^1.0.0-beta.4",
+    "@yellfage/amfory-jwt": "^1.0.0-beta.5",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "express": "^4.18.1",
